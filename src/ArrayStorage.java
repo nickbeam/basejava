@@ -5,31 +5,35 @@ import com.sun.deploy.util.ArrayUtil;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int size = 0;
 
     void clear() {
         storage = new Resume[10000];
+        size = 0;
     }
 
     void save(Resume r) {
-        for (int i = 0; i < storage.length; i++){
-            if (storage[i] == null) {
-                storage[i] = r;
-                break;
-            }
-        }
+        storage[size] = r;
+        size++;
     }
 
     Resume get(String uuid) {
-        for (Resume i:storage) {
-            if ((i != null) && (i.toString().equals(uuid))) return i;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return storage[i];
+            }
         }
         return null;
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i].toString().equals(uuid)) {
-                storage[i] = null;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)){
+                Resume[] tmp = new Resume[10000];
+                System.arraycopy(storage, 0, tmp, 0, i);
+                System.arraycopy(storage, i + 1, tmp, i, size - i);
+                storage = tmp;
+                size--;
                 break;
             }
         }
@@ -39,23 +43,12 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] all = new Resume[0];
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                Resume[] tmp = new Resume[all.length + 1];
-                System.arraycopy(all, 0, tmp, 0, all.length);
-                System.arraycopy(storage, i, tmp, all.length, 1);
-                all = tmp;
-            }
-        }
+        Resume[] all = new Resume[size];
+        System.arraycopy(storage, 0, all, 0, size);
         return all;
     }
 
     int size() {
-        int size = 0;
-        for (Resume i:storage) {
-            if (i != null) size++;
-        }
         return size;
     }
 }
