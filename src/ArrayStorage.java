@@ -1,5 +1,3 @@
-import com.sun.deploy.util.ArrayUtil;
-
 /**
  * Array based storage for Resumes
  */
@@ -31,9 +29,7 @@ public class ArrayStorage {
     void delete(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)){
-                Resume[] tmp = storage;
-                System.arraycopy(storage, i + 1, tmp, i, storage.length - i - 1);
-                storage = tmp;
+                System.arraycopy(storage, i + 1, storage, i, storage.length - i - 1);
                 size--;
                 break;
             }
