@@ -43,7 +43,7 @@ public class ArrayStorage {
                 System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
             }
         } else {
-            System.out.println("Resume storage is full!");
+            System.out.println("Error: resume storage is full!");
         }
     }
 
