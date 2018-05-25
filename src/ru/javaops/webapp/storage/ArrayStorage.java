@@ -25,12 +25,12 @@ public class ArrayStorage {
         return -1;
     }
 
-    public void update(Resume r) {
-        int index = getUuidIndex(r.getUuid());
+    public void update(Resume resume) {
+        int index = getUuidIndex(resume.getUuid());
         if (index >= 0){
-            storage[index] = r;
+            storage[index] = resume;
         } else {
-            System.out.println("Error: resume with uuid: " + r.getUuid() + " not found!");
+            System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
         }
     }
 
