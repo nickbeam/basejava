@@ -36,6 +36,13 @@ public class MainTestArrayStorage {
         printAll();
 
         System.out.println("Size: " + ARRAY_STORAGE.size());
+
+        //Test storage overflow
+        for (int i = 0; i < 10001; i++){
+            Resume resume = new Resume();
+            resume.setUuid("uuid" + i);
+            ARRAY_STORAGE.save(resume);
+        }
     }
 
     static void printAll() {
