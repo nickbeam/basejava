@@ -14,29 +14,51 @@ public class ArrayStorage {
         size = 0;
     }
 
+    private int search(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void update(Resume r) {
+        int index = search(r.getUuid());
+        if (index >= 0){
+            storage[index] = r;
+        } else {
+            System.out.println("Error: resume with uuid: " + r.getUuid() + " not found!");
+        }
+    }
+
     public void save(Resume r) {
-        if (size < storage.length){
-            storage[size] = r;
-            size++;
+        if (size < storage.length) {
+            if (search(r.getUuid()) < 0) {
+                storage[size] = r;
+                size++;
+            } else {
+                System.out.println("Error: resume with uuid: " + r.getUuid() + " already exist!");
+            }
         }
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
+        int index = search(uuid);
+        if (index >= 0) {
+            return storage[index];
         }
+        System.out.println("Error: resume with uuid: " + uuid + " not found!");
         return null;
     }
 
     public void delete(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)){
-                System.arraycopy(storage, i + 1, storage, i, storage.length - i - 1);
-                size--;
-                break;
-            }
+        int index = search(uuid);
+        if (index >= 0) {
+            System.arraycopy(storage, index + 1, storage, index, storage.length - index - 1);
+            size--;
+        } else {
+            System.out.println("Error: resume with uuid: " + uuid + " not found!");
         }
     }
 
