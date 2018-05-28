@@ -48,7 +48,7 @@ public class ArrayStorage implements Storage {
     public void save(Resume resume) {
         if (getIndex(resume.getUuid()) != -1) {
             System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
-        } else if (size >= storage.length) {
+        } else if (size >= STORAGE_LIMIT) {
             System.out.println("Error: resume storage is full!");
         } else {
             storage[size] = resume;
