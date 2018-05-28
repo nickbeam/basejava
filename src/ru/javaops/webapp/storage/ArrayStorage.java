@@ -16,7 +16,7 @@ public class ArrayStorage {
         size = 0;
     }
 
-    private int getIndexResume(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
@@ -25,46 +25,43 @@ public class ArrayStorage {
         return -1;
     }
 
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("Error: resume with uuid: " + uuid + " not found!");
+            return null;
+        }
+        return storage[index];
+    }
+
     public void update(Resume resume) {
-        int index = getIndexResume(resume.getUuid());
-        if (index >= 0){
-            storage[index] = resume;
-        } else {
+        int index = getIndex(resume.getUuid());
+        if (index == -1){
             System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
+        } else {
+            storage[index] = resume;
         }
     }
 
     public void save(Resume resume) {
-        if (size < storage.length) {
-            if (getIndexResume(resume.getUuid()) < 0) {
-                storage[size] = resume;
-                size++;
-            } else {
-                System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
-            }
-        } else {
+        if (getIndex(resume.getUuid()) != -1) {
+            System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
+        } else if (size >= storage.length) {
             System.out.println("Error: resume storage is full!");
+        } else {
+            storage[size] = resume;
+            size++;
         }
-    }
-
-    public Resume get(String uuid) {
-        int index = getIndexResume(uuid);
-        if (index >= 0) {
-            return storage[index];
-        }
-        System.out.println("Error: resume with uuid: " + uuid + " not found!");
-        return null;
     }
 
     public void delete(String uuid) {
-        int index = getIndexResume(uuid);
-        if (index >= 0) {
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("Error: resume with uuid: " + uuid + " not found!");
+        } else {
             size--;
             storage[index] = storage[size];
             storage[size] = null;
-
-        } else {
-            System.out.println("Error: resume with uuid: " + uuid + " not found!");
         }
     }
 
