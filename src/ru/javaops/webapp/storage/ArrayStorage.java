@@ -13,22 +13,13 @@ public class ArrayStorage extends AbstractArrayStorage {
         size = 0;
     }
 
-    private int getIndex(String uuid) {
+    protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
         return -1;
-    }
-
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            System.out.println("Error: resume with uuid: " + uuid + " not found!");
-            return null;
-        }
-        return storage[index];
     }
 
     public void update(Resume resume) {
