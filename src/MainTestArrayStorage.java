@@ -1,12 +1,12 @@
 import ru.javaops.webapp.model.Resume;
 import ru.javaops.webapp.storage.ArrayStorage;
-import ru.javaops.webapp.storage.Storage;
+import ru.javaops.webapp.storage.IStorage;
 
 /**
  * Test for com.urise.webapp.storage.ru.javaops.webapp.storage.ArrayStorage
  */
 public class MainTestArrayStorage {
-    private static final Storage ARRAY_STORAGE = new ArrayStorage();
+    private static final IStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
         final Resume r1 = new Resume();
