@@ -2,6 +2,8 @@ package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.model.Resume;
 
+import java.util.Arrays;
+
 /**
  * Array based storage for Resumes
  */
@@ -22,6 +24,15 @@ public abstract class AbstractArrayStorage implements IStorage {
             return null;
         }
         return storage[index];
+    }
+
+    public void clear() {
+        Arrays.fill(storage, 0, size,  null);
+        size = 0;
+    }
+
+    public Resume[] getAll() {
+        return Arrays.copyOfRange(storage, 0, size);
     }
 
     protected abstract int getIndex(String uuid);
