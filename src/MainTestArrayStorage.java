@@ -1,20 +1,21 @@
 import ru.javaops.webapp.model.Resume;
-import ru.javaops.webapp.storage.ArrayStorage;
 import ru.javaops.webapp.storage.IStorage;
+import ru.javaops.webapp.storage.SortedArrayStorage;
 
 /**
  * Test for com.urise.webapp.storage.ru.javaops.webapp.storage.ArrayStorage
  */
 public class MainTestArrayStorage {
-    private static final IStorage ARRAY_STORAGE = new ArrayStorage();
+    private static final IStorage ARRAY_STORAGE = new SortedArrayStorage();//ArrayStorage();
 
     public static void main(String[] args) {
         final Resume r1 = new Resume();
-        r1.setUuid("uuid1");
+        r1.setUuid("uuid3");
         final Resume r2 = new Resume();
-        r2.setUuid("uuid2");
+        r2.setUuid("uuid1");
         final Resume r3 = new Resume();
-        r3.setUuid("uuid3");
+        r3.setUuid("uuid2");
+
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
@@ -39,7 +40,7 @@ public class MainTestArrayStorage {
         System.out.println("Size: " + ARRAY_STORAGE.size());
 
         //Test storage overflow
-        for (int i = 0; i < 10001; i++){
+        for (int i = 0; i < 100001; i++){
             Resume resume = new Resume();
             resume.setUuid("uuid" + i);
             ARRAY_STORAGE.save(resume);

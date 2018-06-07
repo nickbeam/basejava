@@ -22,16 +22,24 @@ public class SortedArrayStorage extends AbstractArrayStorage{
         if (index == -1){
             System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
         } else {
-            storage[index] = resume;
+            delete(resume.getUuid());
+            save(resume);
         }
     }
 
     @Override
     public void save(Resume resume) {
-        int insertIndex = ~Arrays.binarySearch(storage, 0, size, resume);
-        System.arraycopy(storage, insertIndex, storage, insertIndex + 1, size - insertIndex);
-        storage[insertIndex] = resume;
-        size++;
+        int index = getIndex(resume.getUuid());
+        if (index >= 0){
+            System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
+        } else if (size >= STORAGE_LIMIT) {
+            System.out.println("Error: resume storage is full!");
+        } else {
+            index = ~index;
+            System.arraycopy(storage, index, storage, index + 1, size - index);
+            storage[index] = resume;
+            size++;
+        }
     }
 
     @Override
