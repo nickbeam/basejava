@@ -19,7 +19,7 @@ public class SortedArrayStorage extends AbstractArrayStorage{
     @Override
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
-        if (index == -1){
+        if (index < 0){
             System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
         } else {
             delete(resume.getUuid());
@@ -45,7 +45,7 @@ public class SortedArrayStorage extends AbstractArrayStorage{
     @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index == -1) {
+        if (index < 0) {
             System.out.println("Error: resume with uuid: " + uuid + " not found!");
         } else {
             size--;
