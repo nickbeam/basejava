@@ -30,15 +30,9 @@ public class ArrayStorage extends AbstractArrayStorage {
         storage[size] = resume;
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            System.out.println("Error: resume with uuid: " + uuid + " not found!");
-        } else {
-            size--;
-            storage[index] = storage[size];
-            storage[size] = null;
-        }
+    @Override
+    protected void removeResumeFromStorage(int index) {
+        storage[index] = storage[size];
+        storage[size] = null;
     }
-
 }
