@@ -35,6 +35,15 @@ public abstract class AbstractArrayStorage implements IStorage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index < 0){
+            System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
+        } else {
+            updateResumeInStorage(resume);
+        }
+    }
+
     public void save(Resume resume) {
         if (getIndex(resume.getUuid()) >= 0) {
             System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
@@ -57,6 +66,8 @@ public abstract class AbstractArrayStorage implements IStorage {
     }
 
     protected abstract int getIndex(String uuid);
+
+    protected abstract void updateResumeInStorage(Resume resume);
 
     protected abstract void putResumeToStorage(Resume resume);
 

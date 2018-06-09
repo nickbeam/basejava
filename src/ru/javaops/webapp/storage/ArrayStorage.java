@@ -16,13 +16,10 @@ public class ArrayStorage extends AbstractArrayStorage {
         return -1;
     }
 
-    public void update(Resume resume) {
+    @Override
+    protected void updateResumeInStorage(Resume resume) {
         int index = getIndex(resume.getUuid());
-        if (index == -1){
-            System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
-        } else {
-            storage[index] = resume;
-        }
+        storage[index] = resume;
     }
 
     @Override

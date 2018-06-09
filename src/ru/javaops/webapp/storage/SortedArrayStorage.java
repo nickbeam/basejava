@@ -17,14 +17,9 @@ public class SortedArrayStorage extends AbstractArrayStorage{
     }
 
     @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0){
-            System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
-        } else {
-            delete(resume.getUuid());
-            save(resume);
-        }
+    protected void updateResumeInStorage(Resume resume) {
+        delete(resume.getUuid());
+        save(resume);
     }
 
     @Override
