@@ -25,15 +25,9 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
-    public void save(Resume resume) {
-        if (getIndex(resume.getUuid()) != -1) {
-            System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
-        } else if (size >= STORAGE_LIMIT) {
-            System.out.println("Error: resume storage is full!");
-        } else {
-            storage[size] = resume;
-            size++;
-        }
+    @Override
+    protected void putResumeToStorage(Resume resume) {
+        storage[size] = resume;
     }
 
     public void delete(String uuid) {

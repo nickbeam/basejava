@@ -35,6 +35,19 @@ public abstract class AbstractArrayStorage implements IStorage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
+    public void save(Resume resume) {
+        if (getIndex(resume.getUuid()) >= 0) {
+            System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
+        } else if (size >= STORAGE_LIMIT) {
+            System.out.println("Error: resume storage is full!");
+        } else {
+            putResumeToStorage(resume);
+            size++;
+        }
+    }
+
     protected abstract int getIndex(String uuid);
+
+    protected abstract void putResumeToStorage(Resume resume);
 
 }
