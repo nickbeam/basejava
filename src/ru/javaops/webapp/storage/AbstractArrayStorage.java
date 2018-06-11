@@ -40,8 +40,7 @@ public abstract class AbstractArrayStorage implements IStorage {
         if (index < 0){
             System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
         } else {
-            delete(resume.getUuid());
-            save(resume);
+            storage[index] = resume;
         }
     }
 

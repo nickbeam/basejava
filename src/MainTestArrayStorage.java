@@ -11,12 +11,9 @@ public class MainTestArrayStorage {
     //private static final IStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
-        final Resume r1 = new Resume();
-        r1.setUuid("uuid3");
-        final Resume r2 = new Resume();
-        r2.setUuid("uuid1");
-        final Resume r3 = new Resume();
-        r3.setUuid("uuid2");
+        final Resume r1 = new Resume("uuid3");
+        final Resume r2 = new Resume("uuid1");
+        final Resume r3 = new Resume("uuid2");
 
 
         ARRAY_STORAGE.save(r1);
@@ -30,7 +27,6 @@ public class MainTestArrayStorage {
 
         //Test update method
         printAll();
-        r3.setUuid("uuid4");
         ARRAY_STORAGE.update(r3);
 
         printAll();
@@ -43,8 +39,7 @@ public class MainTestArrayStorage {
 
         //Test storage overflow
         for (int i = 0; i < 100001; i++){
-            Resume resume = new Resume();
-            resume.setUuid("uuid" + i);
+            Resume resume = new Resume("uuid" + i);
             ARRAY_STORAGE.save(resume);
         }
     }

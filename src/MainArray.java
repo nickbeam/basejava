@@ -1,4 +1,5 @@
 import ru.javaops.webapp.model.Resume;
+import ru.javaops.webapp.storage.ArrayStorage;
 import ru.javaops.webapp.storage.IStorage;
 import ru.javaops.webapp.storage.SortedArrayStorage;
 
@@ -10,7 +11,8 @@ import java.io.InputStreamReader;
  * Test for com.urise.webapp.storage.ru.javaops.webapp.storage.ArrayStorage
  */
 public class MainArray {
-    private final static IStorage ARRAY_STORAGE = new SortedArrayStorage();//ArrayStorage();
+    //private final static IStorage ARRAY_STORAGE = new ArrayStorage();
+    private final static IStorage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -34,8 +36,7 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume();
-                    r.setUuid(uuid);
+                    r = new Resume(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
