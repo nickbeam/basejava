@@ -6,7 +6,7 @@ package ru.javaops.webapp.model;
 public class Resume implements Comparable<Resume>{
 
     // Unique identifier
-    private String uuid;
+    private final String uuid;
 
     public Resume(String uuid){
         this.uuid = uuid;
