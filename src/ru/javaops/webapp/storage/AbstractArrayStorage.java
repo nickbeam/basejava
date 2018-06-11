@@ -40,17 +40,19 @@ public abstract class AbstractArrayStorage implements IStorage {
         if (index < 0){
             System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
         } else {
-            updateResumeInStorage(resume);
+            delete(resume.getUuid());
+            save(resume);
         }
     }
 
     public void save(Resume resume) {
-        if (getIndex(resume.getUuid()) >= 0) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
             System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
         } else if (size >= STORAGE_LIMIT) {
             System.out.println("Error: resume storage is full!");
         } else {
-            putResumeToStorage(resume);
+            putResume(index, resume);
             size++;
         }
     }
@@ -61,16 +63,15 @@ public abstract class AbstractArrayStorage implements IStorage {
             System.out.println("Error: resume with uuid: " + uuid + " not found!");
         } else {
             size--;
-            removeResumeFromStorage(index);
+            removeResume(index);
+            storage[size] = null;
         }
     }
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract void updateResumeInStorage(Resume resume);
+    protected abstract void putResume(int index, Resume resume);
 
-    protected abstract void putResumeToStorage(Resume resume);
-
-    protected abstract void removeResumeFromStorage(int index);
+    protected abstract void removeResume(int index);
 
 }
