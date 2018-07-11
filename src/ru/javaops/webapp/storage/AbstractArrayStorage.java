@@ -1,5 +1,8 @@
 package ru.javaops.webapp.storage;
 
+import ru.javaops.webapp.exception.ExistStorageException;
+import ru.javaops.webapp.exception.NotExistStorageException;
+import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -20,8 +23,7 @@ public abstract class AbstractArrayStorage implements IStorage {
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("Error: resume with uuid: " + uuid + " not found!");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -38,7 +40,7 @@ public abstract class AbstractArrayStorage implements IStorage {
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index < 0){
-            System.out.println("Error: resume with uuid: " + resume.getUuid() + " not found!");
+            throw new NotExistStorageException(resume.getUuid());
         } else {
             storage[index] = resume;
         }
@@ -47,9 +49,9 @@ public abstract class AbstractArrayStorage implements IStorage {
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
-            System.out.println("Error: resume with uuid: " + resume.getUuid() + " already exist!");
+            throw new ExistStorageException(resume.getUuid());
         } else if (size >= STORAGE_LIMIT) {
-            System.out.println("Error: resume storage is full!");
+            throw new StorageException("Error: resume storage is full!", resume.getUuid());
         } else {
             putResume(index, resume);
             size++;
