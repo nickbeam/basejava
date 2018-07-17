@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 import static ru.javaops.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractArrayStorageTest {
-    private IStorage storage;
+    private final IStorage storage;
 
     public AbstractArrayStorageTest(IStorage storage){
         this.storage = storage;
