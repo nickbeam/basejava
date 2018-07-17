@@ -8,8 +8,6 @@ import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.*;
 import static ru.javaops.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
