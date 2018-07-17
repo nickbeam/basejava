@@ -61,7 +61,7 @@ public abstract class AbstractArrayStorage implements IStorage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("Error: resume with uuid: " + uuid + " not found!");
+            throw new NotExistStorageException(uuid);
         } else {
             size--;
             removeResume(index);

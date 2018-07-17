@@ -3,7 +3,9 @@ package ru.javaops.webapp.storage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
+import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -44,15 +46,14 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void clear() {
-        storage.clear();
-        Assert.assertEquals(0, storage.size());
-    }
-
-    @Test
     public void getAll() {
         Resume[] all = new Resume[]{resume1, resume2, resume3};
         Assert.assertArrayEquals(all, storage.getAll());
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void getNotExist() {
+        storage.get("dummy");
     }
 
     @Test
@@ -68,6 +69,11 @@ public abstract class AbstractArrayStorageTest {
         Assert.assertEquals("uuid9", storage.get("uuid9").toString());
     }
 
+    @Test(expected = ExistStorageException.class)
+    public void saveStorageException() {
+        storage.save(resume1);
+    }
+
     @Test(expected = NotExistStorageException.class)
     public void delete() {
         storage.delete("uuid3");
@@ -75,19 +81,21 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void getNotExist() {
-        storage.get("dummy");
+    public void deleteStorageException() {
+        storage.delete(new Resume().getUuid());
     }
 
     @Test
+    public void clear() {
+        storage.clear();
+        Assert.assertEquals(0, storage.size());
+    }
+
+    @Test(expected = StorageException.class)
     public void storageOverflow() {
-        try{
-            for (int i = storage.size(); i < STORAGE_LIMIT + 1; i++){
-                storage.save(new Resume());
-            }
-            fail("Exception not thrown");
-        } catch(Exception e) {
-            assertEquals("Error: resume storage is full!", e.getMessage());
+        for (int i = storage.size(); i < STORAGE_LIMIT + 1; i++) {
+            storage.save(new Resume());
         }
+        fail("Exception not thrown");
     }
 }
