@@ -6,8 +6,6 @@ import org.junit.Test;
 import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.model.Resume;
 
-import java.util.UUID;
-
 import static org.junit.Assert.*;
 
 public abstract class AbstractArrayStorageTest {
