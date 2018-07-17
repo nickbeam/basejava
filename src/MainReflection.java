@@ -18,10 +18,8 @@ public class MainReflection {
         try {
             Method method = resumeClass.getDeclaredMethod("toString", null);
             System.out.println(method.invoke(r, null));
-        }catch (NoSuchMethodException e1){
+        }catch (NoSuchMethodException | InvocationTargetException e1){
             System.out.println(e1.getMessage());
-        }catch (InvocationTargetException e2){
-            System.out.println(e2.getMessage());
         }
 
     }
