@@ -11,7 +11,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 public abstract class AbstractArrayStorageTest {
-    private IStorage storage;
+    private IStorage storage = new ArrayStorage();
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -32,27 +32,41 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void get() {
-
+        Assert.assertEquals("uuid1", storage.get(UUID_1).toString());
+        Assert.assertEquals("uuid2", storage.get(UUID_2).toString());
+        Assert.assertEquals("uuid3", storage.get(UUID_3).toString());
     }
 
     @Test
     public void clear() {
+        storage.clear();
+        Assert.assertEquals(0, storage.size());
     }
 
     @Test
     public void getAll() {
+        Resume[] all = storage.getAll();
+        Assert.assertArrayEquals(all, storage.getAll());
     }
 
     @Test
     public void update() {
+        Resume resume = storage.get("uuid3");
+        storage.update(resume);
+        Assert.assertEquals(resume, storage.get(resume.getUuid()));
     }
 
     @Test
     public void save() {
+        final String UUID_4 = "uuid4";
+        storage.save(new Resume(UUID_4));
+        Assert.assertEquals("uuid4", storage.get("uuid4").toString());
     }
 
-    @Test
+    @Test(expected = NotExistStorageException.class)
     public void delete() {
+        storage.delete("uuid4");
+        storage.get("uuid4");
     }
 
     @Test(expected = NotExistStorageException.class)
