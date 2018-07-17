@@ -22,7 +22,7 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_3 = "uuid3";
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() {
         storage.clear();
         storage.save(new Resume(UUID_1));
         storage.save(new Resume(UUID_2));
@@ -67,24 +67,24 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void delete() throws Exception {
+    public void delete() {
         storage.delete("uuid3");
         storage.get("uuid3");
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void getNotExist() throws Exception {
+    public void getNotExist() {
         storage.get("dummy");
     }
 
     @Test
-    public void storageOverflow() throws Exception {
+    public void storageOverflow() {
         try{
             for (int i = 0; i < 100001; i++){
                 storage.save(new Resume());
             }
             fail("Exception not thrown");
-        }catch(Exception e){
+        } catch(Exception e) {
             assertEquals("Error: resume storage is full!", e.getMessage());
         }
     }
