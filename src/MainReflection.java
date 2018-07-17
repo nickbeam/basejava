@@ -16,10 +16,10 @@ public class MainReflection {
 
         Class resumeClass = Resume.class;
         try {
-            Method method = resumeClass.getDeclaredMethod("toString", null);
-            System.out.println(method.invoke(r, null));
-        }catch (NoSuchMethodException | InvocationTargetException e1){
-            System.out.println(e1.getMessage());
+            Method method = resumeClass.getDeclaredMethod("toString", (Class<?>[]) null);
+            System.out.println(method.invoke(r, (Object[]) null));
+        }catch (NoSuchMethodException | InvocationTargetException e){
+            System.out.println(e.getMessage());
         }
 
     }
