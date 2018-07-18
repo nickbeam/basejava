@@ -74,12 +74,15 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void storageOverflow() {
-        for (int i = storage.size(); i < STORAGE_LIMIT; i++) {
-            storage.save(new Resume());
+        try {
+            for (int i = storage.size(); i < STORAGE_LIMIT; i++) {
+                storage.save(new Resume());
+            }
+        } catch (Exception e) {
+            fail("Storage is not full filled!");
         }
         try {
             storage.save(new Resume());
-            fail("Exception not thrown");
         } catch (Exception e) {
             Assert.assertEquals("Error: resume storage is full!", e.getMessage());
         }
