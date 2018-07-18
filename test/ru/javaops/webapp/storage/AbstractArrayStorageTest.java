@@ -79,7 +79,7 @@ public abstract class AbstractArrayStorageTest {
                 storage.save(new Resume());
             }
         } catch (Exception e) {
-            fail("Storage is not full filled!");
+            fail("Storage is not full filled! " + "Exception: " + e.getMessage());
         }
         try {
             storage.save(new Resume());
