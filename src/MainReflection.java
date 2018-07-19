@@ -19,7 +19,7 @@ public class MainReflection {
         try {
             Method method = resumeClass.getDeclaredMethod("toString", (Class<?>[]) null);
             System.out.println(method.invoke(r, (Object[]) null));
-        }catch (NoSuchMethodException | InvocationTargetException e){
+        } catch (NoSuchMethodException | InvocationTargetException e) {
             System.out.println(e.getMessage());
         }
 

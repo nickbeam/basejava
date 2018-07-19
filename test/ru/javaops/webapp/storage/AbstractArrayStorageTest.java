@@ -21,7 +21,7 @@ public abstract class AbstractArrayStorageTest {
     private static final Resume resume2 = new Resume(UUID_2);
     private static final Resume resume3 = new Resume(UUID_3);
 
-    public AbstractArrayStorageTest(IStorage storage){
+    public AbstractArrayStorageTest(IStorage storage) {
         this.storage = storage;
     }
 
@@ -35,12 +35,12 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void size() {
-        Assert.assertEquals(3, storage.size());
+        compareSize(3);
     }
 
     @Test
     public void get() {
-        Assert.assertEquals(resume1, storage.get(UUID_1));
+        compareResume(resume1);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -58,14 +58,21 @@ public abstract class AbstractArrayStorageTest {
     public void update() {
         Resume resume = storage.get(UUID_3);
         storage.update(resume);
-        Assert.assertEquals(resume, storage.get(UUID_3));
+        compareSize(3);
+        compareResume(resume);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void updateNotExist() {
+        storage.update(new Resume());
     }
 
     @Test
     public void save() {
         Resume resume = new Resume();
         storage.save(resume);
-        Assert.assertEquals(resume, storage.get(resume.getUuid()));
+        compareSize(4);
+        compareResume(resume);
     }
 
     @Test(expected = ExistStorageException.class)
@@ -88,6 +95,7 @@ public abstract class AbstractArrayStorageTest {
     @Test(expected = NotExistStorageException.class)
     public void delete() {
         storage.delete(UUID_3);
+        compareSize(2);
         storage.get(UUID_3);
     }
 
@@ -99,6 +107,14 @@ public abstract class AbstractArrayStorageTest {
     @Test
     public void clear() {
         storage.clear();
-        Assert.assertEquals(0, storage.size());
+        compareSize(0);
+    }
+
+    private void compareSize(int size){
+        Assert.assertEquals(size, storage.size());
+    }
+
+    private void compareResume(Resume resume){
+        Assert.assertEquals(resume, storage.get(resume.getUuid()));
     }
 }
