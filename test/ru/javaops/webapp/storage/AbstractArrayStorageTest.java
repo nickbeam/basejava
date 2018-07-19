@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
+import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
 import static org.junit.Assert.*;
@@ -72,7 +73,7 @@ public abstract class AbstractArrayStorageTest {
         storage.save(resume1);
     }
 
-    @Test
+    @Test(expected = StorageException.class)
     public void storageOverflow() {
         try {
             for (int i = storage.size(); i < STORAGE_LIMIT; i++) {
@@ -81,11 +82,7 @@ public abstract class AbstractArrayStorageTest {
         } catch (Exception e) {
             fail("Storage is not full filled! " + "Exception: " + e.getMessage());
         }
-        try {
-            storage.save(new Resume());
-        } catch (Exception e) {
-            Assert.assertEquals("Error: resume storage is full!", e.getMessage());
-        }
+        storage.save(new Resume());
     }
 
     @Test(expected = NotExistStorageException.class)
