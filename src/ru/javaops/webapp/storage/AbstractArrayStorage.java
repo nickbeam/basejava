@@ -6,15 +6,20 @@ import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage implements IStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage implements IStorage {
     protected static final int STORAGE_LIMIT = 100000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
+
+    protected AbstractArrayStorage() {//???
+        super(null);
+    }
 
     public int size() {
         return size;
