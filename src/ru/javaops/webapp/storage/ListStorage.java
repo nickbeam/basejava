@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class ListStorage extends AbstractStorage {
 
-    protected ListStorage() {
+    public ListStorage() {
         super(new ArrayList<Resume>());
     }
 
