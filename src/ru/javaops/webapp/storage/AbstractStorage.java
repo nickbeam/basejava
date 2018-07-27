@@ -5,6 +5,7 @@ import ru.javaops.webapp.model.Resume;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 
 public abstract class AbstractStorage implements IStorage{
 
@@ -14,19 +15,8 @@ public abstract class AbstractStorage implements IStorage{
         storage = newStorage;
     }
 
-    public abstract void save(Resume resume);
-
-    public Resume get(String uuid){
-        for (Resume resume : storage){
-            if (resume.getUuid().equals(uuid)){
-                return resume;
-            }
-        }
-        return null;
-    }
-
     public Resume[] getAll(){
-        return storage.toArray(new Resume[storage.size()]);
+        return storage.toArray(new Resume[0]);
     }
 
     public void update(Resume resume){
@@ -54,4 +44,8 @@ public abstract class AbstractStorage implements IStorage{
     public void clear(){
         storage.clear();
     }
+
+    public abstract void save(Resume resume);
+
+    public abstract Resume get(String uuid);
 }

@@ -12,18 +12,18 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
+    public void save(Resume resume) {
+        storage.add(resume);
+    }
+
+    @Override
     public Resume get(String uuid) {
-        Iterator<Resume> iterator = storage.iterator();
-        while (iterator.hasNext()){
-            if (iterator.next().getUuid().equals(uuid)){
-                return iterator.next();
+        for (Resume resume : storage){
+            if (resume.getUuid().equals(uuid)){
+                return resume;
             }
         }
         return null;
     }
 
-    @Override
-    public void save(Resume resume) {
-        storage.add(resume);
-    }
 }
