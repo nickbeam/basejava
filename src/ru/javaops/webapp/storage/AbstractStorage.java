@@ -1,5 +1,6 @@
 package ru.javaops.webapp.storage;
 
+import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.model.Resume;
 
 import java.util.Collection;
@@ -13,36 +14,44 @@ public abstract class AbstractStorage implements IStorage{
         storage = newStorage;
     }
 
-    public void clear(){
-        storage.clear();
-    }
-
-    public abstract Resume get(String uuid);
-
-    public void update(Resume resume){
-
-    }
-
     public abstract void save(Resume resume);
 
-    public void delete(String uuid){
-        Iterator<Resume> iterator = storage.iterator();
-        while (iterator.hasNext()){
-            System.out.println(iterator.next());
-            Resume resume = iterator.next();
+    public Resume get(String uuid){
+        for (Resume resume : storage){
             if (resume.getUuid().equals(uuid)){
-                storage.remove(resume);
-                break;
+                return resume;
             }
         }
+        return null;
     }
 
     public Resume[] getAll(){
         return storage.toArray(new Resume[storage.size()]);
     }
 
+    public void update(Resume resume){
+        if (!storage.contains(resume)){
+            throw new NotExistStorageException(resume.getUuid());
+        } else {
+            Resume findResume = get(resume.getUuid());
+            findResume = resume;
+        }
+    }
+
+    public void delete(String uuid){
+        Resume resume = get(uuid);
+        if (resume == null) {
+            throw new NotExistStorageException(resume.getUuid());
+        } else {
+            storage.remove(resume);
+        }
+    }
+
     public int size(){
         return storage.size();
     }
 
+    public void clear(){
+        storage.clear();
+    }
 }

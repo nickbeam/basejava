@@ -21,8 +21,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage implements IS
         super(null);
     }
 
-    public int size() {
-        return size;
+    public void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
+            throw new ExistStorageException(resume.getUuid());
+        } else if (size >= STORAGE_LIMIT) {
+            throw new StorageException("Error: resume storage is full!", resume.getUuid());
+        } else {
+            putResume(index, resume);
+            size++;
+        }
     }
 
     public Resume get(String uuid) {
@@ -31,11 +39,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage implements IS
             throw new NotExistStorageException(uuid);
         }
         return storage[index];
-    }
-
-    public void clear() {
-        Arrays.fill(storage, 0, size,  null);
-        size = 0;
     }
 
     public Resume[] getAll() {
@@ -51,18 +54,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage implements IS
         }
     }
 
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else if (size >= STORAGE_LIMIT) {
-            throw new StorageException("Error: resume storage is full!", resume.getUuid());
-        } else {
-            putResume(index, resume);
-            size++;
-        }
-    }
-
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
@@ -72,6 +63,15 @@ public abstract class AbstractArrayStorage extends AbstractStorage implements IS
             removeResume(index);
             storage[size] = null;
         }
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public void clear() {
+        Arrays.fill(storage, 0, size,  null);
+        size = 0;
     }
 
     protected abstract int getIndex(String uuid);
