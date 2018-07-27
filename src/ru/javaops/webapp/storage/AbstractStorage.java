@@ -4,8 +4,6 @@ import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.model.Resume;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Optional;
 
 public abstract class AbstractStorage implements IStorage{
 
