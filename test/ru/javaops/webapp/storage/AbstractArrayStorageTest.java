@@ -11,7 +11,7 @@ import ru.javaops.webapp.model.Resume;
 import static org.junit.Assert.*;
 import static ru.javaops.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractArrayStorageTest{
     private final IStorage storage;
 
     private static final String UUID_1 = "uuid1";
