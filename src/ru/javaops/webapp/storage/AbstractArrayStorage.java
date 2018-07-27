@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage implements IStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 100000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
