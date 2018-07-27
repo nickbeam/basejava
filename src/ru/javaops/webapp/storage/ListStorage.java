@@ -4,6 +4,7 @@ import ru.javaops.webapp.model.Resume;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Optional;
 
 public class ListStorage extends AbstractStorage {
 

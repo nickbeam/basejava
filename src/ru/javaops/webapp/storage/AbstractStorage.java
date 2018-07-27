@@ -31,7 +31,7 @@ public abstract class AbstractStorage implements IStorage{
     public void delete(String uuid){
         Resume resume = get(uuid);
         if (resume == null) {
-            throw new NotExistStorageException(resume.getUuid());
+            throw new NotExistStorageException(uuid);
         } else {
             storage.remove(resume);
         }
