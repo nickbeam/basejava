@@ -1,49 +1,71 @@
 package ru.javaops.webapp.storage;
 
+import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
+import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public abstract class AbstractStorage implements IStorage{
 
-    protected static Collection<Resume> storage;
+    protected Object getNotExistSearchKey(String uuid){
 
-    protected AbstractStorage(Collection<Resume> newStorage){
-        storage = newStorage;
+        return null;
     }
 
-    public Resume[] getAll(){
-        return storage.toArray(new Resume[0]);
+    protected abstract void doSave(Resume resume, Object searchKey);
+
+    public void save(Resume resume) {
+        Object searchKey = getNotExistSearchKey(resume.getUuid());
+        doSave(resume, searchKey);
     }
 
-    public void update(Resume resume){
-        if (!storage.contains(resume)){
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        }
+        return storage[index];
+    }
+
+    public Resume[] getAll() {
+        return Arrays.copyOfRange(storage, 0, size);
+    }
+
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index < 0){
             throw new NotExistStorageException(resume.getUuid());
         } else {
-            Resume findResume = get(resume.getUuid());
-            findResume = resume;
+            storage[index] = resume;
         }
     }
 
-    public void delete(String uuid){
-        Resume resume = get(uuid);
-        if (resume == null) {
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
             throw new NotExistStorageException(uuid);
         } else {
-            storage.remove(resume);
+            size--;
+            removeResume(index);
+            storage[size] = null;
         }
     }
 
-    public int size(){
-        return storage.size();
+    public int size() {
+        return size;
     }
 
-    public void clear(){
-        storage.clear();
+    public void clear() {
+        Arrays.fill(storage, 0, size,  null);
+        size = 0;
     }
 
-    public abstract void save(Resume resume);
+    protected abstract int getIndex(String uuid);
 
-    public abstract Resume get(String uuid);
+    protected abstract void putResume(int index, Resume resume);
+
+    protected abstract void removeResume(int index);
 }
