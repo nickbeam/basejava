@@ -2,11 +2,8 @@ package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
-import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
-import java.util.Arrays;
-import java.util.Collection;
 
 public abstract class AbstractStorage implements IStorage{
 
