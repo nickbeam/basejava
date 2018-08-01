@@ -6,7 +6,6 @@ import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Array based storage for Resumes
@@ -17,11 +16,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    protected AbstractArrayStorage() {//???
-        super(null);
-    }
-
-    public void save(Resume resume) {
+    @Override
+    protected void doSave(Resume resume, Object searchKey) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
@@ -33,12 +29,53 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    public Resume get(String uuid) {
+    @Override
+    protected Object getSearchKey(String uuid) {
+        return null;
+    }
+
+    @Override
+    protected Resume doGet(Object searchKey) {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
         return storage[index];
+    }
+
+    @Override
+    protected void doUpdate(Resume resume, Object searchKey) {
+
+    }
+
+    @Override
+    protected void doDelete(Object searchKey) {
+
+    }
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return false;
+    }
+
+//    public void save(Resume resume) {
+//        int index = getIndex(resume.getUuid());
+//        if (index >= 0) {
+//            throw new ExistStorageException(resume.getUuid());
+//        } else if (size >= STORAGE_LIMIT) {
+//            throw new StorageException("Error: resume storage is full!", resume.getUuid());
+//        } else {
+//            putResume(index, resume);
+//            size++;
+//        }
+//    }
+
+    public Resume get(String uuid) {
+//        int index = getIndex(uuid);
+//        if (index < 0) {
+//            throw new NotExistStorageException(uuid);
+//        }
+//        return storage[index];
     }
 
     public Resume[] getAll() {

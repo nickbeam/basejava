@@ -6,10 +6,6 @@ import java.util.ArrayList;
 
 public class ListStorage extends AbstractStorage {
 
-    public ListStorage() {
-        super(new ArrayList<Resume>());
-    }
-
     @Override
     public void save(Resume resume) {
         storage.add(resume);
