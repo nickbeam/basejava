@@ -10,12 +10,17 @@ import java.util.Collection;
 
 public abstract class AbstractStorage implements IStorage{
 
-    protected Object getNotExistSearchKey(String uuid){
-
-        return null;
-    }
-
     protected abstract void doSave(Resume resume, Object searchKey);
+
+    protected abstract Object getSearchKey(String uuid);
+
+    protected abstract Resume doGet(Object searchKey);
+
+    protected abstract void doUpdate(Resume resume, Object searchKey);
+
+    protected abstract void doDelete(Object searchKey);
+
+    protected abstract boolean isExist(Object searchKey);
 
     public void save(Resume resume) {
         Object searchKey = getNotExistSearchKey(resume.getUuid());
@@ -23,49 +28,33 @@ public abstract class AbstractStorage implements IStorage{
     }
 
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
-    }
-
-    public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+        Object searchKey = getSearchKey(uuid);
+        return doGet(searchKey);
     }
 
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0){
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-        }
+        Object searchKey = getExistSearchKey(resume.getUuid());
+        doUpdate(resume, searchKey);
     }
 
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
+        Object searchKey = getExistSearchKey(uuid);
+        doDelete(searchKey);
+    }
+
+    protected Object getExistSearchKey(String uuid){
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)){
             throw new NotExistStorageException(uuid);
-        } else {
-            size--;
-            removeResume(index);
-            storage[size] = null;
         }
+        return searchKey;
     }
 
-    public int size() {
-        return size;
+    protected Object getNotExistSearchKey(String uuid){
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)){
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
     }
-
-    public void clear() {
-        Arrays.fill(storage, 0, size,  null);
-        size = 0;
-    }
-
-    protected abstract int getIndex(String uuid);
-
-    protected abstract void putResume(int index, Resume resume);
-
-    protected abstract void removeResume(int index);
 }
