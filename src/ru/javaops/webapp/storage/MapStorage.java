@@ -6,12 +6,47 @@ import ru.javaops.webapp.model.Resume;
 public class MapStorage extends AbstractStorage {
 
     @Override
-    public void save(Resume resume) {
+    protected void doSave(Resume resume, Object searchKey) {
+
     }
 
     @Override
-    public Resume get(String uuid) {
+    protected Object getSearchKey(String uuid) {
         return null;
     }
 
+    @Override
+    protected Resume doGet(Object searchKey) {
+        return null;
+    }
+
+    @Override
+    protected void doUpdate(Resume resume, Object searchKey) {
+
+    }
+
+    @Override
+    protected void doDelete(Object searchKey) {
+
+    }
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+
+    }
+
+    @Override
+    public Resume[] getAll() {
+        return new Resume[0];
+    }
+
+    @Override
+    public int size() {
+        return 0;
+    }
 }
