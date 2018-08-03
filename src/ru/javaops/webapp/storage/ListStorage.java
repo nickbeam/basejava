@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ListStorage extends AbstractStorage {
 
-    private ArrayList<Resume> storage = new ArrayList<>();
+    private final ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
@@ -35,12 +35,12 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object searchKey) {
-        storage.remove(storage.indexOf(searchKey));
+        storage.remove(searchKey);
     }
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return storage.contains(storage.indexOf(searchKey));
+        return storage.contains(searchKey);
     }
 
     @Override

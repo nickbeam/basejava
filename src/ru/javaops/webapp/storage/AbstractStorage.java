@@ -25,7 +25,7 @@ public abstract class AbstractStorage implements IStorage{
     }
 
     public Resume get(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+        Object searchKey = getExistSearchKey(uuid);
         return doGet(searchKey);
     }
 
@@ -39,7 +39,7 @@ public abstract class AbstractStorage implements IStorage{
         doDelete(searchKey);
     }
 
-    protected Object getExistSearchKey(String uuid){
+    private Object getExistSearchKey(String uuid){
         Object searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)){
             throw new NotExistStorageException(uuid);
@@ -47,7 +47,7 @@ public abstract class AbstractStorage implements IStorage{
         return searchKey;
     }
 
-    protected Object getNotExistSearchKey(String uuid){
+    private Object getNotExistSearchKey(String uuid){
         Object searchKey = getSearchKey(uuid);
         if (isExist(searchKey)){
             throw new ExistStorageException(uuid);
