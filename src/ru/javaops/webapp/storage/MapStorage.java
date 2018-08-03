@@ -2,8 +2,12 @@ package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.model.Resume;
 
+import java.util.HashMap;
+
 
 public class MapStorage extends AbstractStorage {
+
+    private HashMap<String, Resume> storage = new HashMap<>();
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
