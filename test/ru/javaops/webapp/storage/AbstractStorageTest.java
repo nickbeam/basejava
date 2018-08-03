@@ -81,7 +81,7 @@ public abstract class AbstractStorageTest{
     //Test only for Arrays.
     @Test(expected = StorageException.class)
     public void storageOverflow() {
-        Assume.assumeFalse(storage.getClass().toString().contains("ListStorage") || storage.getClass().toString().contains("MapStorage"));
+        Assume.assumeFalse(storage.getClass().getName().contains("ListStorage") || storage.getClass().getName().contains("MapStorage"));
         try {
             for (int i = storage.size(); i < STORAGE_LIMIT; i++) {
                 storage.save(new Resume());
