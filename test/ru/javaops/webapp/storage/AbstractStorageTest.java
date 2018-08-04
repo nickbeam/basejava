@@ -3,11 +3,8 @@ package ru.javaops.webapp.storage;
 import org.junit.*;
 import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
-import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
-import static org.junit.Assert.*;
-import static ru.javaops.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractStorageTest{
     protected final IStorage storage;
