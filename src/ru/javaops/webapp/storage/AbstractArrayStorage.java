@@ -11,6 +11,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    @Override
+    protected abstract Integer getSearchKey(String uuid);
+
+    protected abstract void putResume(int index, Resume resume);
+
+    protected abstract void removeResume(int index);
+
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
@@ -23,13 +30,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         Arrays.fill(storage, 0, size,  null);
         size = 0;
     }
-
-    @Override
-    protected abstract Integer getSearchKey(String uuid);
-
-    protected abstract void putResume(int index, Resume resume);
-
-    protected abstract void removeResume(int index);
 
     @Override
     protected void doSave(Resume resume, Object index) {
