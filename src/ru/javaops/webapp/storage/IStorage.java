@@ -2,9 +2,6 @@ package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.model.Resume;
 
-/**
- * Array based storage for Resumes
- */
 public interface IStorage {
 
     void clear();

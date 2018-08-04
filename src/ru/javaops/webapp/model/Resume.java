@@ -2,9 +2,6 @@ package ru.javaops.webapp.model;
 
 import java.util.UUID;
 
-/**
- * com.urise.webapp.model.ru.javaops.webapp.model.Resume class
- */
 public class Resume implements Comparable<Resume>{
 
     // Unique identifier

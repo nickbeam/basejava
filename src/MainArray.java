@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-/**
- * Test for com.urise.webapp.storage.ru.javaops.webapp.storage.ArrayStorage
- */
 public class MainArray {
     //private final static IStorage ARRAY_STORAGE = new ArrayStorage();
     //private final static IStorage ARRAY_STORAGE = new SortedArrayStorage();
