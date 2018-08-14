@@ -16,8 +16,6 @@ public interface IStorage {
 
     void delete(String uuid);
 
-    //Resume[] getAll();
-    //return sorted by fullName List
     List<Resume> getAllSorted();
 
     int size();
