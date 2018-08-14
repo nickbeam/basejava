@@ -1,5 +1,6 @@
 package ru.javaops.webapp.model;
 
+import java.util.Comparator;
 import java.util.UUID;
 
 public class Resume {
@@ -27,6 +28,8 @@ public class Resume {
 
         return uuid.equals(resume.uuid);
     }
+
+    public static Comparator<Resume> COMPARE_RESUMES_BY_FULLNAME = (o1, o2) -> o1.fullName.compareToIgnoreCase(o2.fullName);
 
     @Override
     public int hashCode() {

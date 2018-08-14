@@ -3,7 +3,9 @@ package ru.javaops.webapp.storage;
 import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
 
-import java.util.Arrays;
+import java.util.*;
+
+import static ru.javaops.webapp.model.Resume.COMPARE_RESUMES_BY_FULLNAME;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 100000;
@@ -18,8 +20,15 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void removeResume(int index);
 
-    public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+//    public Resume[] getAll() {
+//        return Arrays.copyOfRange(storage, 0, size);
+//    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> listStorage = Arrays.asList(storage);
+        Collections.sort(listStorage, COMPARE_RESUMES_BY_FULLNAME);
+        return listStorage;
     }
 
     public int size() {
