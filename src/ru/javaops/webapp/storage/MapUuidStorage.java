@@ -23,7 +23,7 @@ public class MapUuidStorage extends AbstractStorage {
                 return pair.getKey();
             }
         }
-        return  null;
+        return null;
     }
 
     @Override

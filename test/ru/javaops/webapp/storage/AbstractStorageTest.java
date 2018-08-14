@@ -5,6 +5,9 @@ import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.model.Resume;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public abstract class AbstractStorageTest {
     protected final IStorage storage;
@@ -46,7 +49,8 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAll() {
         Resume[] resumes = {resume1, resume2, resume3};
-        Assert.assertArrayEquals(resumes, storage.getAll());
+        List<Resume> listStorage = Arrays.asList(resumes);
+        Assert.assertEquals(listStorage, storage.getAllSorted());
     }
 
     @Test
