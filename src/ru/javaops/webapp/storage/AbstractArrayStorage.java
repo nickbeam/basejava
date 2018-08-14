@@ -20,10 +20,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void removeResume(int index);
 
-//    public Resume[] getAll() {
-//        return Arrays.copyOfRange(storage, 0, size);
-//    }
-
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> listStorage = Arrays.asList(storage);

@@ -2,7 +2,7 @@ package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.model.Resume;
 
-import java.util.HashMap;
+import java.util.*;
 
 
 public class MapUuidStorage extends AbstractStorage {
@@ -11,46 +11,53 @@ public class MapUuidStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
-
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     protected Object getSearchKey(String uuid) {
-        return null;
+        Iterator it = storage.entrySet().iterator();
+        while (it.hasNext()){
+            Map.Entry pair = (Map.Entry)it.next();
+            if (pair.getKey().equals(uuid)){
+                return pair.getKey();
+            }
+        }
+        return  null;
     }
 
     @Override
     protected Resume doGet(Object searchKey) {
-        return null;
+        return  storage.get(searchKey);
     }
 
     @Override
     protected void doUpdate(Resume resume, Object searchKey) {
-
+        storage.replace(searchKey.toString(), resume);
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-
+        storage.remove(searchKey);
     }
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return false;
+        return storage.containsKey(searchKey);
     }
 
     @Override
     public void clear() {
-
+        storage.clear();
     }
 
     @Override
-    public Resume[] getAll() {
-        return new Resume[0];
+    public List<Resume> getAllSorted() {
+        return new ArrayList<Resume>(storage.values());
     }
 
     @Override
     public int size() {
-        return 0;
+        return storage.size();
     }
 }

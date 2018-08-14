@@ -3,6 +3,9 @@ package ru.javaops.webapp.storage;
 import ru.javaops.webapp.model.Resume;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
 
@@ -49,9 +52,16 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
+    public List<Resume> getAllSorted() {
+        List<Resume> listStorage = storage;
+        Collections.sort(listStorage, Resume.COMPARE_RESUMES_BY_FULLNAME);
+        return listStorage;
     }
+
+//    @Override
+//    public Resume[] getAll() {
+//        return storage.toArray(new Resume[0]);
+//    }
 
     @Override
     public int size() {
