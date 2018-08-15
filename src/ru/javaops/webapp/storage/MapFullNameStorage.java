@@ -46,6 +46,18 @@ public class MapFullNameStorage extends AbstractStorage {
     }
 
     @Override
+    public void save(Resume resume) {
+        Object searchKey = getNotExistSearchKey(resume.getFullName());
+        doSave(resume, searchKey);
+    }
+
+    @Override
+    public void update(Resume resume) {
+        Object searchKey = getExistSearchKey(resume.getFullName());
+        doUpdate(resume, searchKey);
+    }
+
+    @Override
     public void clear() {
         storage.clear();
     }

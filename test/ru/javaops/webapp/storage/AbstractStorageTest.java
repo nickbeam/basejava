@@ -16,9 +16,12 @@ public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
-    private static final Resume resume1 = new Resume(UUID_1, UUID_1);
-    private static final Resume resume2 = new Resume(UUID_2, UUID_2);
-    private static final Resume resume3 = new Resume(UUID_3, UUID_3);
+    private static final String NAME_1 = "Name1";
+    private static final String NAME_2 = "Name2";
+    protected static final String NAME_3 = "Name3";
+    private static final Resume resume1 = new Resume(UUID_1, NAME_1);
+    private static final Resume resume2 = new Resume(UUID_2, NAME_2);
+    private static final Resume resume3 = new Resume(UUID_3, NAME_3);
 
     public AbstractStorageTest(IStorage storage) {
         this.storage = storage;
@@ -52,7 +55,7 @@ public abstract class AbstractStorageTest {
         //Resume[] resumes = {resume1, resume2, resume3};
         List<Resume> listStorage = new ArrayList<>(); //Arrays.asList(resumes);
         listStorage.add(resume1);listStorage.add(resume2); listStorage.add(resume3);
-        Assert.assertEquals(listStorage, storage);
+        Assert.assertEquals(listStorage, storage.getAllSorted());
     }
 
     @Test
@@ -99,11 +102,11 @@ public abstract class AbstractStorageTest {
         compareSize(0);
     }
 
-    private void compareSize(int size){
+    protected void compareSize(int size){
         Assert.assertEquals(size, storage.size());
     }
 
-    private void compareResume(Resume resume){
+    protected void compareResume(Resume resume){
         Assert.assertEquals(resume, storage.get(resume.getUuid()));
     }
 }
