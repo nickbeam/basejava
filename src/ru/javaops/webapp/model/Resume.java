@@ -29,7 +29,17 @@ public class Resume {
         return uuid.equals(resume.uuid);
     }
 
-    public static Comparator<Resume> COMPARE_RESUMES_BY_FULLNAME = (o1, o2) -> o1.fullName.compareToIgnoreCase(o2.fullName);
+    public static Comparator<Resume> COMPARE_RESUMES_BY_FULLNAME = new Comparator<Resume>() {
+        int compareResult;
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            compareResult =  o1.fullName.compareToIgnoreCase(o2.fullName);
+            if (compareResult != 0){
+                return compareResult;
+            }
+            return o1.uuid.compareToIgnoreCase(o2.uuid);
+        }
+    };
 
     @Override
     public int hashCode() {
