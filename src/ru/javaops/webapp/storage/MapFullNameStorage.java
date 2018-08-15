@@ -4,14 +4,13 @@ import ru.javaops.webapp.model.Resume;
 
 import java.util.*;
 
-
-public class MapUuidStorage extends AbstractStorage {
+public class MapFullNameStorage extends AbstractStorage {
 
     private Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
-        storage.put(resume.getUuid(), resume);
+        storage.put(resume.getFullName(), resume);
     }
 
     @Override
@@ -28,12 +27,12 @@ public class MapUuidStorage extends AbstractStorage {
 
     @Override
     protected Resume doGet(Object searchKey) {
-        return  storage.get(searchKey);
+        return storage.get(searchKey);
     }
 
     @Override
     protected void doUpdate(Resume resume, Object searchKey) {
-        storage.replace(searchKey.toString(), resume);
+
     }
 
     @Override

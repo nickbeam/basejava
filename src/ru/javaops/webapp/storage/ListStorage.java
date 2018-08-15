@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ListStorage extends AbstractStorage {
 
-    private final ArrayList<Resume> storage = new ArrayList<>();
+    private final List<Resume> storage = new ArrayList<>();
 
     @Override
     protected void doSave(Resume resume, Object index) {
