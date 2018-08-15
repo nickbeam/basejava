@@ -5,7 +5,6 @@ import ru.javaops.webapp.model.Resume;
 
 import java.util.*;
 
-import static ru.javaops.webapp.model.Resume.COMPARE_RESUMES_BY_FULLNAME;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 100000;
@@ -23,7 +22,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> listStorage = Arrays.asList(storage);
-        Collections.sort(listStorage, COMPARE_RESUMES_BY_FULLNAME);
+        Collections.sort(listStorage, Resume.COMPARE_RESUMES_BY_FULLNAME);
         return listStorage;
     }
 

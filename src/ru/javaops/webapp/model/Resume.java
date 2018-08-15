@@ -33,11 +33,11 @@ public class Resume {
         int compareResult;
         @Override
         public int compare(Resume o1, Resume o2) {
-            compareResult =  o1.fullName.compareToIgnoreCase(o2.fullName);
+            compareResult =  o1.fullName.compareTo(o2.fullName);
             if (compareResult != 0){
                 return compareResult;
             }
-            return o1.uuid.compareToIgnoreCase(o2.uuid);
+            return o1.uuid.compareTo(o2.uuid);
         }
     };
 
