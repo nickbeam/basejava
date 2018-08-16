@@ -1,6 +1,7 @@
 package ru.javaops.webapp.model;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Resume {
@@ -10,12 +11,15 @@ public class Resume {
 
     private String fullName;
 
-    public Resume(){
+    public Resume(String fullName){
+        Objects.requireNonNull(fullName, "fullName can't be null");
         this.uuid = (UUID.randomUUID().toString());
-        this.fullName = this.uuid;
+        this.fullName = fullName;
     }
 
     public Resume(String uuid, String fullName){
+        Objects.requireNonNull(uuid, "UUID can't be null");
+        Objects.requireNonNull(fullName, "fullName can't be null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
@@ -57,6 +61,6 @@ public class Resume {
 
     @Override
     public String toString() {
-        return uuid;
+        return uuid + " (" + fullName + ")";
     }
 }

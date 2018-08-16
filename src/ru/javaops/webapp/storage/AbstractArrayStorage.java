@@ -19,13 +19,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void removeResume(int index);
 
-    @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> listStorage = Arrays.asList(Arrays.copyOfRange(storage, 0, size));
-        Collections.sort(listStorage, Resume.COMPARE_RESUMES_BY_FULLNAME);
-        return listStorage;
-    }
-
     public int size() {
         return size;
     }
@@ -48,6 +41,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected boolean isExist(Object index) {
         return (Integer) index >= 0;
+    }
+
+    @Override
+    public List<Resume> doCopyAll() {
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 
     @Override
