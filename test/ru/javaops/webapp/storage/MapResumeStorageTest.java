@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.javaops.webapp.model.Resume;
 
-public class MapFullNameStorageTest extends AbstractStorageTest{
-    public MapFullNameStorageTest() {
+public class MapResumeStorageTest extends AbstractStorageTest{
+    public MapResumeStorageTest() {
         super(new MapResumeStorage());
     }
 }
