@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Resume {
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private final String uuid;
@@ -12,9 +12,7 @@ public class Resume {
     private String fullName;
 
     public Resume(String fullName){
-        Objects.requireNonNull(fullName, "fullName can't be null");
-        this.uuid = (UUID.randomUUID().toString());
-        this.fullName = fullName;
+        this((UUID.randomUUID().toString()), fullName);
     }
 
     public Resume(String uuid, String fullName){
@@ -34,17 +32,11 @@ public class Resume {
         return uuid.equals(resume.uuid);
     }
 
-    public static Comparator<Resume> COMPARE_RESUMES_BY_FULLNAME = new Comparator<Resume>() {
-        int compareResult;
-        @Override
-        public int compare(Resume o1, Resume o2) {
-            compareResult =  o1.fullName.compareTo(o2.fullName);
-            if (compareResult != 0){
-                return compareResult;
-            }
-            return o1.uuid.compareTo(o2.uuid);
-        }
-    };
+    @Override
+    public int compareTo(Resume o) {
+        int comp = this.fullName.compareTo(o.fullName);
+        return comp != 0 ? comp : this.uuid.compareTo(o.uuid);
+    }
 
     @Override
     public int hashCode() {

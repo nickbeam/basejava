@@ -55,7 +55,7 @@ public abstract class AbstractStorage implements IStorage{
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> list = doCopyAll();
-        Collections.sort(list, Resume.COMPARE_RESUMES_BY_FULLNAME);
+        Collections.sort(list);
         return list;
     }
 
