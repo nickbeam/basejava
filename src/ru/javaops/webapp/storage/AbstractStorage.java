@@ -8,44 +8,44 @@ import java.util.Collections;
 import java.util.List;
 
 
-public abstract class AbstractStorage implements IStorage{
+public abstract class AbstractStorage<SK> implements IStorage{
 
-    protected abstract void doSave(Resume resume, Object searchKey);
+    protected abstract void doSave(Resume resume, SK searchKey);
 
-    protected abstract Object getSearchKey(String uuid);
+    protected abstract SK getSearchKey(String uuid);
 
-    protected abstract Resume doGet(Object searchKey);
+    protected abstract Resume doGet(SK searchKey);
 
-    protected abstract void doUpdate(Resume resume, Object searchKey);
+    protected abstract void doUpdate(Resume resume, SK searchKey);
 
-    protected abstract void doDelete(Object searchKey);
+    protected abstract void doDelete(SK searchKey);
 
-    protected abstract boolean isExist(Object searchKey);
+    protected abstract boolean isExist(SK searchKey);
 
     protected abstract List<Resume> doCopyAll();
 
     public void save(Resume resume) {
-        Object searchKey = getNotExistSearchKey(resume.getUuid());
+        SK searchKey = getNotExistSearchKey(resume.getUuid());
         doSave(resume, searchKey);
     }
 
     public Resume get(String uuid) {
-        Object searchKey = getExistSearchKey(uuid);
+        SK searchKey = getExistSearchKey(uuid);
         return doGet(searchKey);
     }
 
     public void update(Resume resume) {
-        Object searchKey = getExistSearchKey(resume.getUuid());
+        SK searchKey = getExistSearchKey(resume.getUuid());
         doUpdate(resume, searchKey);
     }
 
     public void delete(String uuid) {
-        Object searchKey = getExistSearchKey(uuid);
+        SK searchKey = getExistSearchKey(uuid);
         doDelete(searchKey);
     }
 
-    protected Object getExistSearchKey(String uuid){
-        Object searchKey = getSearchKey(uuid);
+    protected SK getExistSearchKey(String uuid){
+        SK searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)){
             throw new NotExistStorageException(uuid);
         }
@@ -59,8 +59,8 @@ public abstract class AbstractStorage implements IStorage{
         return list;
     }
 
-    protected Object getNotExistSearchKey(String uuid){
-        Object searchKey = getSearchKey(uuid);
+    protected SK getNotExistSearchKey(String uuid){
+        SK searchKey = getSearchKey(uuid);
         if (isExist(searchKey)){
             throw new ExistStorageException(uuid);
         }
