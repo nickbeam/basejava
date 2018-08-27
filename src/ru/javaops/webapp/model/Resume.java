@@ -1,5 +1,6 @@
 package ru.javaops.webapp.model;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -9,6 +10,11 @@ public class Resume implements Comparable<Resume> {
     private final String uuid;
 
     private String fullName;
+
+    private List<TextSection> personal;
+    private List<TextSection> objective;
+    private List<TableSection> experience;
+    private List<TableSection> education;
 
     public Resume(String fullName){
         this((UUID.randomUUID().toString()), fullName);
