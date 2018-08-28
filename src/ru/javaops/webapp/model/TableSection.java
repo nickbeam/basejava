@@ -3,7 +3,7 @@ package ru.javaops.webapp.model;
 
 import java.util.Date;
 
-public class TableSection {
+public class TableSection extends Section{
     private String organisation;
     private String web;
     private Date startDate;

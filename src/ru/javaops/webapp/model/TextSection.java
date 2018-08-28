@@ -2,35 +2,15 @@ package ru.javaops.webapp.model;
 
 import java.util.Objects;
 
-public class TextSection {
+public class TextSection extends Section {
     private String text;
-    private SectionType type;
-    private Resume resume;
 
-    public TextSection(Resume resume, SectionType type, String text) {
-        this.resume = resume;
-        this.type = type;
+    public TextSection(String text) {
         this.text = text;
     }
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public void setType(SectionType type) {
-        this.type = type;
-    }
-
-    public void setResume(Resume resume) {
-        this.resume = resume;
-    }
-
-    public SectionType getType() {
-        return type;
-    }
-
-    public Resume getResume() {
-        return resume;
     }
 
     public String getText() {
