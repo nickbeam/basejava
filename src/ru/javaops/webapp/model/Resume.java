@@ -1,6 +1,7 @@
 package ru.javaops.webapp.model;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,8 +12,8 @@ public class Resume implements Comparable<Resume> {
 
     private String fullName;
 
-    private HashMap<ContactType, String> contactMap;
-    private HashMap<SectionType, Section> sectionMap;
+    private Map<ContactType, String> contactMap = new HashMap<>();
+    private Map<SectionType, Section> sectionMap = new HashMap<>();
 
     public Resume(String fullName){
         this((UUID.randomUUID().toString()), fullName);

@@ -1,13 +1,15 @@
 package ru.javaops.webapp.model;
 
 public enum ContactType {
-    MOBILEPHONE("Тел."),
+    PHONE("Тел."),
+    MOBILE_PHONE("Мобильный тел."),
     EMAIL("E-mail"),
+    TELEGRAM("Telegram"),
     SKYPE("Skype"),
     LINKEDIN("LinkedIn"),
     GITHUB("GitHub"),
     STACKOVERFLOW("Stackoverflow"),
-    HOMEPAGE("Домашняя страница");
+    HOME_PAGE("Домашняя страница");
 
     private String title;
 
