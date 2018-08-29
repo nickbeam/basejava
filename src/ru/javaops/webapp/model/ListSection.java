@@ -7,6 +7,7 @@ public class ListSection extends Section {
     private final List<String> stringList;
 
     public ListSection(List<String> stringList) {
+        Objects.requireNonNull(stringList, "stringList can't be NULL");
         this.stringList = stringList;
     }
 

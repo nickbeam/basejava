@@ -12,18 +12,26 @@ public class Resume implements Comparable<Resume> {
 
     private String fullName;
 
-    private Map<ContactType, String> contactMap = new HashMap<>();
-    private Map<SectionType, Section> sectionMap = new HashMap<>();
+    private final Map<ContactType, String> contacts = new HashMap<>();
+    private final Map<SectionType, Section> sections = new HashMap<>();
 
     public Resume(String fullName){
         this((UUID.randomUUID().toString()), fullName);
     }
 
     public Resume(String uuid, String fullName){
-        Objects.requireNonNull(uuid, "UUID can't be null");
-        Objects.requireNonNull(fullName, "fullName can't be null");
+        Objects.requireNonNull(uuid, "UUID can't be NULL");
+        Objects.requireNonNull(fullName, "fullName can't be NULL");
         this.uuid = uuid;
         this.fullName = fullName;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
     }
 
     @Override

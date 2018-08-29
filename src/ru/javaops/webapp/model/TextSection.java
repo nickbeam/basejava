@@ -6,6 +6,7 @@ public class TextSection extends Section {
     private final String text;
 
     public TextSection(String text) {
+        Objects.requireNonNull(text, "text can't be NULL");
         this.text = text;
     }
 
