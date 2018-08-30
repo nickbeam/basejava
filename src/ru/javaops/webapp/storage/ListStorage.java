@@ -3,7 +3,6 @@ package ru.javaops.webapp.storage;
 import ru.javaops.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage<Integer> {

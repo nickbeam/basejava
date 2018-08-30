@@ -1,5 +1,4 @@
 import ru.javaops.webapp.model.Resume;
-import ru.javaops.webapp.storage.ArrayStorage;
 import ru.javaops.webapp.storage.IStorage;
 import ru.javaops.webapp.storage.SortedArrayStorage;
 
