@@ -1,3 +1,5 @@
+package ru.javaops.webapp;
+
 public class TestSingleton {
     private static TestSingleton instance;
 
