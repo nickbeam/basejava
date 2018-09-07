@@ -2,7 +2,6 @@ package ru.javaops.webapp;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MainFile {

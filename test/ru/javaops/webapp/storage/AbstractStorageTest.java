@@ -43,9 +43,9 @@ public abstract class AbstractStorageTest {
         resume1.addSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("qualification 1", "qualification 2", "qualification 3")));
 
         resume1.addSection(SectionType.EXPERIENCE, new OrganisationSection(
-                new Organisation("Organisation 3", "url3", LocalDate.of(2008, Month.MAY, 15), LocalDate.now(), "Синьйор", "Работаю синьйором"),
-                new Organisation("Organisation 2", "url2", LocalDate.of(2005, Month.DECEMBER, 3), LocalDate.of(2008, Month.MAY, 14), "Миддл", "Работал миддлом"),
-                new Organisation("Organisation 1", "url1", LocalDate.of(2004, Month.APRIL, 1), LocalDate.of(2005, Month.DECEMBER, 2), "Джуниор", "Работал джуном")
+                new Organisation("Yandex", "url3", LocalDate.of(2008, Month.MAY, 15), LocalDate.now(), "Синьйор", "Работаю синьйором"),
+                new Organisation("JetBrains", "url2", LocalDate.of(2005, Month.DECEMBER, 3), LocalDate.of(2008, Month.MAY, 14), "Миддл", "Работал миддлом"),
+                new Organisation("JetBrains", "url1", LocalDate.of(2004, Month.APRIL, 1), LocalDate.of(2005, Month.DECEMBER, 2), "Джуниор", "Работал джуном")
         ));
 
         resume1.addSection(SectionType.EDUCATION, new OrganisationSection(
