@@ -43,13 +43,19 @@ public abstract class AbstractStorageTest {
         resume1.addSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("qualification 1", "qualification 2", "qualification 3")));
 
         resume1.addSection(SectionType.EXPERIENCE, new OrganisationSection(
-                new Organisation("Yandex", "url3", new Organisation.Position[(LocalDate.of(2008, Month.MAY, 15), LocalDate.now(), "Синьйор", "Работаю синьйором")]),
-                new Organisation("JetBrains", "url2", LocalDate.of(2005, Month.DECEMBER, 3), LocalDate.of(2008, Month.MAY, 14), "Миддл", "Работал миддлом"),
-                new Organisation("JetBrains", "url1", LocalDate.of(2004, Month.APRIL, 1), LocalDate.of(2005, Month.DECEMBER, 2), "Джуниор", "Работал джуном")
+                new Organisation("Yandex", "yandex.ru",
+                        new Organisation.Position(2008, Month.MAY, "Синьйор", "Работаю синьйором")
+                ),
+                new Organisation("JetBrains", "jetbrains.com",
+                        new Organisation.Position(2005, Month.DECEMBER, 2008, Month.MAY, "Миддл", "Работал миддлом"),
+                        new Organisation.Position(2004, Month.APRIL, 2005, Month.DECEMBER, "Джуниор", "Работал джуном")
+                )
         ));
 
         resume1.addSection(SectionType.EDUCATION, new OrganisationSection(
-                new Organisation("Study 1", "urlStudy1", LocalDate.of(2000, Month.SEPTEMBER, 1), LocalDate.of(2004, Month.JUNE, 15), "Student", "Was a student")
+                new Organisation("Study 1", "urlStudy1",
+                        new Organisation.Position(2000, Month.SEPTEMBER, 2004, Month.JUNE, "Student", "Was a student")
+                )
         ));
         System.out.println(resume1);
         System.out.println(resume1.getContacts());
