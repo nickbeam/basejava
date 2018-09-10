@@ -33,14 +33,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Error: resume storage is full!", resume.getUuid());
         } else {
-            putResume((Integer) index, resume);
+            putResume(index, resume);
             size++;
         }
     }
 
     @Override
     protected boolean isExist(Integer index) {
-        return (Integer) index >= 0;
+        return index >= 0;
     }
 
     @Override
@@ -50,18 +50,18 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected Resume doGet(Integer index) {
-        return storage[(Integer) index];
+        return storage[index];
     }
 
     @Override
     protected void doUpdate(Resume resume, Integer index) {
-        storage[(Integer) index] = resume;
+        storage[index] = resume;
     }
 
     @Override
     protected void doDelete(Integer index) {
         size--;
-        removeResume((Integer) index);
+        removeResume(index);
         storage[size] = null;
     }
 }
