@@ -12,23 +12,16 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException("Error", e);
         }
-        //File dir = new File("D:/JAVA/basejava/src/ru/javaops/webapp");
-        File dir = new File("/Users/nick/Documents/JAVA/PROJECTS/basejava/src/ru/javaops/webapp");
 
-        if (dir.isDirectory()){
+        File dir = new File("./src/ru/javaops/webapp");
+
+        if (dir.isDirectory() && dir.list() != null){
             getDirectoryFileNames(dir);
         } else if (!dir.exists()){
             System.out.println("dir is not exist");
         } else {
             System.out.println("dir is not directory");
         }
-
-//        String[] list = dir.list();
-//        if (list != null){
-//            for (String name:dir.list()) {
-//                System.out.println(name);
-//            }
-//        }
 
         try (FileInputStream fis = new FileInputStream(filePath)) {
             System.out.println(fis.read());
@@ -37,7 +30,7 @@ public class MainFile {
         }
     }
 
-    public static void getDirectoryFileNames(File dir){
+    private static void getDirectoryFileNames(File dir){
         File filePath;
         for (String name:dir.list()) {
             filePath = new File(dir + "/" + name);
