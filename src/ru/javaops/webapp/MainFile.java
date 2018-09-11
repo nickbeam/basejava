@@ -1,5 +1,7 @@
 package ru.javaops.webapp;
 
+import ru.javaops.webapp.exception.StorageException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,13 +17,7 @@ public class MainFile {
 
         File dir = new File("./src/ru/javaops/webapp");
 
-        if (dir.isDirectory() && dir.list() != null){
-            getDirectoryFileNames(dir);
-        } else if (!dir.exists()){
-            System.out.println("dir is not exist");
-        } else {
-            System.out.println("dir is not directory");
-        }
+        getDirectoryFileNames(dir);
 
         try (FileInputStream fis = new FileInputStream(filePath)) {
             System.out.println(fis.read());
@@ -31,13 +27,15 @@ public class MainFile {
     }
 
     private static void getDirectoryFileNames(File dir){
-        File filePath;
-        for (String name:dir.list()) {
-            filePath = new File(dir + "/" + name);
-            if (filePath.isDirectory()){
-                getDirectoryFileNames(filePath);
+        File[] files = dir.listFiles();
+        if (files == null){
+            throw new StorageException(dir.getName() + " is not directory, or IO Error");
+        }
+        for (File file:files) {
+            if (file.isDirectory()){
+                getDirectoryFileNames(file);
             } else {
-                System.out.println(name);
+                System.out.println(file.getName());
             }
         }
     }

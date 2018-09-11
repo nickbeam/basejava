@@ -11,28 +11,31 @@ import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File directory;
+
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
-        if (!directory.isDirectory()){
+        if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
-        if (!directory.canRead() || !directory.canWrite()){
+        if (!directory.canRead() || !directory.canWrite()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
     }
 
+    protected abstract Resume doRead(File file) throws IOException;
+
+    protected abstract void doWrite(Resume resume, File file) throws IOException;
+
     @Override
     protected void doSave(Resume resume, File file) {
         try {
             file.createNewFile();
-            doWrite(resume, file);
+            doUpdate(resume, file);
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
     }
-
-    protected abstract void doWrite(Resume resume, File file) throws IOException;
 
     @Override
     protected File getSearchKey(String uuid) {
@@ -41,10 +44,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume doGet(File file) {
-        return doRead(file);
+        try {
+            return doRead(file);
+        } catch (IOException e) {
+            throw new StorageException("IO error", file.getName(), e);
+        }
     }
-
-    protected abstract Resume doRead(File file);
 
     @Override
     protected void doUpdate(Resume resume, File file) {
@@ -57,7 +62,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-        if (!file.delete()){
+        if (!file.delete()) {
             throw new StorageException("IO error", file.getName());
         }
     }
@@ -70,23 +75,32 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> doCopyAll() {
         List<Resume> resumes = new ArrayList<>();
-        for (File file:directory.listFiles()) {
-            resumes.add(doRead(file));
+        File[] files = getFiles();
+        for (File file : files) {
+            resumes.add(doGet(file));
         }
         return resumes;
     }
 
     @Override
     public void clear() {
-        for (File file:directory.listFiles()) {
-            if (!file.delete()){
-                throw new StorageException("IO error", file.getName());
-            }
+        File[] files = getFiles();
+        for (File file : files) {
+            doDelete(file);
         }
     }
 
     @Override
     public int size() {
-        return directory.list().length;
+        File[] files = getFiles();
+        return files.length;
+    }
+
+    private File[] getFiles() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException(directory.getName() + " is not directory, or IO Error");
+        }
+        return files;
     }
 }
