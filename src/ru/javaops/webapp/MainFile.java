@@ -29,7 +29,7 @@ public class MainFile {
     private static void getDirectoryFileNames(File dir){
         File[] files = dir.listFiles();
         if (files == null){
-            throw new StorageException(dir.getName() + " is not directory, or IO Error");
+            throw new StorageException("IO Error", dir.getName());
         }
         for (File file:files) {
             if (file.isDirectory()){
