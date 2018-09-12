@@ -52,7 +52,7 @@ public class Organisation {
         private final String description;
 
         public Position(int startYear, Month startMonth, String head, String description) {
-            this(of(startYear, startMonth), NOW(), head, description);
+            this(of(startYear, startMonth), NOW, head, description);
         }
 
         public Position(int startYear, Month startMonth, int endYear, Month endMonth, String head, String description) {
