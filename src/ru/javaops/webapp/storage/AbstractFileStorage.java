@@ -100,7 +100,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File[] getFiles() {
         File[] files = directory.listFiles();
         if (files == null) {
-            throw new StorageException(directory.getName() + " IO Error");
+            throw new StorageException("Directory error " + directory.getName());
         }
         return files;
     }
