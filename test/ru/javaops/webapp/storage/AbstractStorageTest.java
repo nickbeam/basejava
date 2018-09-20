@@ -5,11 +5,14 @@ import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.model.*;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 
 public abstract class AbstractStorageTest {
+    protected final static File STORAGE_DIR = new File("./storage");
+
     protected final IStorage storage;
 
     //private static final String UUID_1 = "uuid1";
