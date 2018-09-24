@@ -15,9 +15,9 @@ public class MainFile {
             throw new RuntimeException("Error", e);
         }
 
-        File dir = new File("./src/ru/javaops/webapp");
+        File dir = new File("./src/ru/javaops"); // /webapp
 
-        getDirectoryFileNames(dir);
+        getDirectoryFileNames(dir, 0);
 
         try (FileInputStream fis = new FileInputStream(filePath)) {
             System.out.println(fis.read());
@@ -26,17 +26,23 @@ public class MainFile {
         }
     }
 
-    private static void getDirectoryFileNames(File dir) {
+    private static void getDirectoryFileNames(File dir, int level) {
         File[] files = dir.listFiles();
         if (files == null) {
             throw new StorageException(dir.getName() + " is not directory, or IO Error");
         }
         for (File file : files) {
-            if (file.isDirectory()) {
-                System.out.println("Directory: " + file.getName());
-                getDirectoryFileNames(file);
+            if (file.isFile()) {
+                for (int i = 0; i < level; i++){
+                    System.out.print("\t");
+                }
+                System.out.println(file.getName());
             } else {
-                System.out.println("    File: " + file.getName());
+                for (int i = 0; i < level; i++){
+                    System.out.print("\t");
+                }
+                System.out.println("[" + file.getName() + "]");
+                getDirectoryFileNames(file, level + 1);
             }
         }
     }
