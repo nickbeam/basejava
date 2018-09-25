@@ -80,13 +80,11 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     protected List<Resume> doCopyAll() {
         List<Resume> resumes = new ArrayList<>();
         try {
-            Files.list(directory).forEach(resumes.add(doGet()));
+            Files.list(directory)
+                    .forEach(file -> resumes.add(doGet(file.toAbsolutePath())));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException(directory.toString() + " is not directory", e);
         }
-//        for (Path path : directory) {
-//            resumes.add(doGet(path));
-//        }
         return resumes;
     }
 
