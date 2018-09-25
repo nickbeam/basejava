@@ -41,7 +41,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return Paths.get(uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
@@ -79,9 +79,14 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected List<Resume> doCopyAll() {
         List<Resume> resumes = new ArrayList<>();
-        for (Path path : directory) {
-            resumes.add(doGet(path));
+        try {
+            Files.list(directory).forEach(resumes.add(doGet()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+//        for (Path path : directory) {
+//            resumes.add(doGet(path));
+//        }
         return resumes;
     }
 
