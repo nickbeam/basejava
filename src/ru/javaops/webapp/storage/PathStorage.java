@@ -13,12 +13,13 @@ import java.util.Objects;
 
 public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
+    private StreamSerialize streamSerialize;
 
 //    protected abstract Resume doRead(InputStream inputStream) throws IOException;
 //
 //    protected abstract void doWrite(Resume resume, OutputStream outputStream) throws IOException;
 
-    protected PathStorage(String dir) {
+    protected PathStorage(String dir, StreamSerialize streamSerialize) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory)) {
@@ -27,6 +28,7 @@ public class PathStorage extends AbstractStorage<Path> {
         if (!Files.isReadable(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not readable/writable");
         }
+        this.streamSerialize = streamSerialize;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(path.toFile())));
+            return streamSerialize.doRead(new BufferedInputStream(new FileInputStream(path.toFile())));
         } catch (IOException e) {
             throw new StorageException("File read error", path.getFileName().toString(), e);
         }
@@ -56,7 +58,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume resume, Path path) {
         try {
-            doWrite(resume, new BufferedOutputStream(new FileOutputStream(path.toFile())));
+            streamSerialize.doWrite(resume, new BufferedOutputStream(new FileOutputStream(path.toFile())));
         } catch (IOException e) {
             throw new StorageException("File write error", path.getFileName().toString(), e);
         }
