@@ -2,6 +2,7 @@ package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
+import ru.javaops.webapp.storage.serialize.StreamSerialize;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,10 +12,6 @@ import java.util.Objects;
 public class FileStorage extends AbstractStorage<File> {
     private File directory;
     private StreamSerialize streamSerialize;
-
-//    protected abstract Resume doRead(InputStream inputStream) throws IOException;
-//
-//    protected abstract void doWrite(Resume resume, OutputStream outputStream) throws IOException;
 
     protected FileStorage(File directory, StreamSerialize streamSerialize) {
         Objects.requireNonNull(directory, "directory must not be null");

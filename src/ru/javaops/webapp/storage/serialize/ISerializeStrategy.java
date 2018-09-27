@@ -1,4 +1,4 @@
-package ru.javaops.webapp.storage;
+package ru.javaops.webapp.storage.serialize;
 
 import ru.javaops.webapp.model.Resume;
 

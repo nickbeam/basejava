@@ -2,6 +2,7 @@ package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
+import ru.javaops.webapp.storage.serialize.StreamSerialize;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -10,14 +11,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
     private StreamSerialize streamSerialize;
-
-//    protected abstract Resume doRead(InputStream inputStream) throws IOException;
-//
-//    protected abstract void doWrite(Resume resume, OutputStream outputStream) throws IOException;
 
     protected PathStorage(String dir, StreamSerialize streamSerialize) {
         directory = Paths.get(dir);
@@ -49,7 +47,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return streamSerialize.doRead(new BufferedInputStream(new FileInputStream(path.toFile())));
+            return streamSerialize.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File read error", path.getFileName().toString(), e);
         }
@@ -58,7 +56,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume resume, Path path) {
         try {
-            streamSerialize.doWrite(resume, new BufferedOutputStream(new FileOutputStream(path.toFile())));
+            streamSerialize.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File write error", path.getFileName().toString(), e);
         }
@@ -80,14 +78,11 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        List<Resume> resumes = new ArrayList<>();
         try {
-            Files.list(directory)
-                    .forEach(file -> resumes.add(doGet(file.toAbsolutePath())));
+            return Files.list(directory).map(this::doGet).collect(Collectors.toList());
         } catch (IOException e) {
             throw new IllegalArgumentException(directory.toString() + " is not directory", e);
         }
-        return resumes;
     }
 
     @Override

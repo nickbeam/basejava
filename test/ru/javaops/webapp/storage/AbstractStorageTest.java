@@ -4,6 +4,7 @@ import org.junit.*;
 import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.model.*;
+import ru.javaops.webapp.storage.serialize.StreamSerialize;
 
 import java.io.File;
 import java.util.Arrays;
