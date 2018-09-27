@@ -12,6 +12,7 @@ import java.util.List;
 
 public abstract class AbstractStorageTest {
     protected final static File STORAGE_DIR = new File("storage");
+    protected final static StreamSerialize STREAM_SERIALIZE = new StreamSerialize();
 
     protected final IStorage storage;
 
