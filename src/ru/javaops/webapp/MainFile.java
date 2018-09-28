@@ -24,21 +24,20 @@ public class MainFile {
         }
 
         File dir = new File("./src/ru/javaops"); // /webapp
-        getDirectoryFileNames(dir, 0);
+        getDirectoryFileNames(dir, "");
     }
 
-    private static void getDirectoryFileNames(File dir, int level) {
+    private static void getDirectoryFileNames(File dir, String space) {
         File[] files = dir.listFiles();
         if (files == null) {
             throw new StorageException(dir.getName() + " is not directory, or IO Error");
         }
         for (File file : files) {
-            String sRepeated = IntStream.range(0, level).mapToObj(i -> "\t").collect(Collectors.joining(""));
             if (file.isFile()) {
-                System.out.println(sRepeated + file.getName());
+                System.out.println(space + file.getName());
             } else {
-                System.out.println(sRepeated + "[" + file.getName() + "]");
-                getDirectoryFileNames(file, level + 1);
+                System.out.println(space + "[" + file.getName() + "]");
+                getDirectoryFileNames(file, space + "    ");
             }
         }
     }
