@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
@@ -35,7 +36,7 @@ public class PathStorage extends AbstractStorage<Path> {
             Files.createFile(path);
             doUpdate(resume, path);
         } catch (IOException e) {
-            throw new StorageException("File create error " + path.toString(), path.getFileName().toString(), e);
+            throw new StorageException("File create error " + path.toString(), getFileName(path), e);
         }
     }
 
@@ -49,7 +50,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return streamSerialize.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("File read error", path.getFileName().toString(), e);
+            throw new StorageException("File read error", getFileName(path), e);
         }
     }
 
@@ -58,7 +59,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             streamSerialize.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("File write error", path.getFileName().toString(), e);
+            throw new StorageException("File write error", getFileName(path), e);
         }
     }
 
@@ -67,7 +68,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("File delete error", path.getFileName().toString(), e);
+            throw new StorageException("File delete error", getFileName(path), e);
         }
     }
 
@@ -78,29 +79,28 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        try {
-            return Files.list(directory).map(this::doGet).collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new IllegalArgumentException(directory.toString() + " is not directory", e);
-        }
+        return getFilesList().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        getFilesList().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
+        return (int) getFilesList().count();
+    }
+
+    private String getFileName(Path path) {
+        return path.getFileName().toString();
+    }
+
+    private Stream<Path> getFilesList() {
         try {
-            return Math.toIntExact(Files.list(directory).count());
+            return Files.list(directory);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException("Files get error", e);
         }
-        return 0;
     }
 }

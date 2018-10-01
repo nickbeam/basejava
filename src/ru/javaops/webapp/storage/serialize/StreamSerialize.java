@@ -20,7 +20,7 @@ public class StreamSerialize implements ISerializeStrategy {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
             return (Resume) objectInputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new StorageException("Resume read error", null, e);
+            throw new StorageException("Resume read error", e);
         }
     }
 }
