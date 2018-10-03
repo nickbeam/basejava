@@ -4,7 +4,7 @@ import org.junit.*;
 import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.model.*;
-import ru.javaops.webapp.storage.serialize.StreamSerialize;
+import ru.javaops.webapp.storage.serialize.StreamSerializer;
 
 import java.io.File;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class AbstractStorageTest {
     protected final static File STORAGE_DIR = new File("storage");
-    protected final static StreamSerialize STREAM_SERIALIZE = new StreamSerialize();
+    protected final static StreamSerializer STREAM_SERIALIZER = new StreamSerializer();
 
     protected final IStorage storage;
 

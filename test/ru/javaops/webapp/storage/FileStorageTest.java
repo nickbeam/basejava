@@ -2,6 +2,6 @@ package ru.javaops.webapp.storage;
 
 public class FileStorageTest extends AbstractStorageTest {
     public FileStorageTest() {
-        super(new FileStorage(STORAGE_DIR, STREAM_SERIALIZE));
+        super(new FileStorage(STORAGE_DIR, STREAM_SERIALIZER));
     }
 }

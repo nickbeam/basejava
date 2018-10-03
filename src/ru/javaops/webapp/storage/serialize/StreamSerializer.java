@@ -5,7 +5,7 @@ import ru.javaops.webapp.model.Resume;
 
 import java.io.*;
 
-public class StreamSerialize implements ISerializeStrategy {
+public class StreamSerializer implements ISerializeStrategy {
     @Override
     public void doWrite(Resume resume, OutputStream outputStream) {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
