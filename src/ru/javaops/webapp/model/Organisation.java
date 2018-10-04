@@ -33,6 +33,25 @@ public class Organisation implements Serializable {
         this.positions = Arrays.asList(positions);
     }
 
+    public Organisation(String name, String url, List<Position> positions){
+        Objects.requireNonNull(name, "name can't be NULL");
+        this.name = name;
+        this.url = url;
+        this.positions = positions;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,6 +105,22 @@ public class Organisation implements Serializable {
             this.endDate = endDate;
             this.head = head;
             this.description = description;
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
+        public String getHead() {
+            return head;
+        }
+
+        public String getDescription() {
+            return description;
         }
 
         @Override
