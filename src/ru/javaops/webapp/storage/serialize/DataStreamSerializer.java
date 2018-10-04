@@ -111,11 +111,11 @@ public class DataStreamSerializer implements ISerializeStrategy {
                         break;
                     case "EXPERIENCE":
                         int orgSize = dis.readInt();
-                        readOrg(dtf, dis, resume, orgSize);
+                        resume.addSection(SectionType.EXPERIENCE, new OrganisationSection(readOrg(dtf, dis, resume, orgSize)));
                         break;
                     case "EDUCATION":
                         int orgSize1 = dis.readInt();
-                        readOrg(dtf, dis, resume, orgSize1);
+                        resume.addSection(SectionType.EDUCATION, new OrganisationSection(readOrg(dtf, dis, resume, orgSize1)));
                         break;
                 }
             }
@@ -123,7 +123,8 @@ public class DataStreamSerializer implements ISerializeStrategy {
         }
     }
 
-    private void readOrg(DateTimeFormatter dtf, DataInputStream dis, Resume resume, int orgSize1) throws IOException {
+    private List<Organisation> readOrg(DateTimeFormatter dtf, DataInputStream dis, Resume resume, int orgSize1) throws IOException {
+        List<Organisation> orgList = new ArrayList<>();
         for (int y = 0; y < orgSize1; y++) {
             Organisation org = new Organisation(dis.readUTF(), dis.readUTF());
             List<Organisation.Position> positionsList = new ArrayList<>();
@@ -135,9 +136,9 @@ public class DataStreamSerializer implements ISerializeStrategy {
                         dis.readUTF(), dis.readUTF())
                 );
             }
-            resume.addSection(SectionType.EXPERIENCE, new OrganisationSection(
-                    new Organisation(org.getName(), org.getUrl(), positionsList)));
+            orgList.add(new Organisation(org.getName(), org.getUrl(), positionsList));
         }
+        return orgList;
     }
 
     private List<String> getStringList(DataInputStream dis) throws IOException {
