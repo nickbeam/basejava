@@ -3,7 +3,6 @@ package ru.javaops.webapp.storage.serialize;
 import ru.javaops.webapp.model.*;
 
 import java.io.*;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -102,11 +101,11 @@ public class DataStreamSerializer implements ISerializeStrategy {
                         resume.addSection(SectionType.OBJECTIVE, new TextSection(dis.readUTF()));
                         break;
                     case "ACHIEVEMENT":
-                        List<String> listRead = getStringList(dis);
+                        List<String> listRead = readList(dis);
                         resume.addSection(SectionType.ACHIEVEMENT, new ListSection(listRead));
                         break;
                     case "QUALIFICATIONS":
-                        List<String> listRead1 = getStringList(dis);
+                        List<String> listRead1 = readList(dis);
                         resume.addSection(SectionType.QUALIFICATIONS, new ListSection(listRead1));
                         break;
                     case "EXPERIENCE":
@@ -141,7 +140,7 @@ public class DataStreamSerializer implements ISerializeStrategy {
         return orgList;
     }
 
-    private List<String> getStringList(DataInputStream dis) throws IOException {
+    private List<String> readList(DataInputStream dis) throws IOException {
         int listSize = dis.readInt();
         List<String> listRead = new ArrayList();
         for (int k = 0; k < listSize; k++) {
