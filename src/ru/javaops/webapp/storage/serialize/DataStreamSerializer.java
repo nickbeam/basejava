@@ -1,12 +1,11 @@
 package ru.javaops.webapp.storage.serialize;
 
-import ru.javaops.webapp.model.ContactType;
-import ru.javaops.webapp.model.Resume;
+import ru.javaops.webapp.model.*;
 
 import java.io.*;
 import java.util.Map;
 
-public class DateStreamSerializer implements ISerializeStrategy {
+public class DataStreamSerializer implements ISerializeStrategy {
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -19,6 +18,13 @@ public class DateStreamSerializer implements ISerializeStrategy {
                 dos.writeUTF(entry.getValue());
             }
             // TODO implements sections
+            Map<SectionType, Section> sections = r.getSections();
+            dos.writeInt(sections.size());
+            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+                dos.writeUTF(entry.getKey().getTitle());
+                dos.writeUTF(entry.getValue().toString());
+                //Section sec = entry.getValue();
+            }
         }
     }
 
@@ -33,6 +39,10 @@ public class DateStreamSerializer implements ISerializeStrategy {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
             // TODO implements sections
+            int sectionsCount = dis.readInt();
+            for (int i = 0; i < sectionsCount; i++){
+                //resume.addSection(SectionType.valueOf(dis.readUTF()), dis.readUTF());
+            }
             return resume;
         }
     }
