@@ -119,13 +119,13 @@ public class DataStreamSerializer implements ISerializeStrategy {
     }
 
     private List<Organisation> readOrganisations(DateTimeFormatter dtf, DataInputStream dis) throws IOException {
-        int orgSize = dis.readInt();
+        int organisationsCount = dis.readInt();
         List<Organisation> listOrg = new ArrayList<>();
-        for (int y = 0; y < orgSize; y++) {
+        for (int y = 0; y < organisationsCount; y++) {
             Organisation org = new Organisation(dis.readUTF(), dis.readUTF());
             List<Organisation.Position> positionsList = new ArrayList<>();
-            int posCount = dis.readInt();
-            for (int p = 0; p < posCount; p++) {
+            int positionsCount = dis.readInt();
+            for (int p = 0; p < positionsCount; p++) {
                 positionsList.add(new Organisation.Position(
                         LocalDate.parse(dis.readUTF(), dtf),
                         LocalDate.parse(dis.readUTF(), dtf),
