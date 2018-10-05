@@ -85,15 +85,15 @@ public class DataStreamSerializer implements ISerializeStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+            int contactsCount = dis.readInt();
+            for (int i = 0; i < contactsCount; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
             // TODO implements sections
-            int secSize = dis.readInt();
-            for (int j = 0; j < secSize; j++) {
-                String sec = dis.readUTF();
-                switch (sec) {
+            int sectionsCount = dis.readInt();
+            for (int j = 0; j < sectionsCount; j++) {
+                String currentSection = dis.readUTF();
+                switch (currentSection) {
                     case "PERSONAL":
                         resume.addSection(SectionType.PERSONAL, new TextSection(dis.readUTF()));
                         break;
@@ -101,20 +101,16 @@ public class DataStreamSerializer implements ISerializeStrategy {
                         resume.addSection(SectionType.OBJECTIVE, new TextSection(dis.readUTF()));
                         break;
                     case "ACHIEVEMENT":
-                        List<String> listRead = readList(dis);
-                        resume.addSection(SectionType.ACHIEVEMENT, new ListSection(listRead));
+                        resume.addSection(SectionType.ACHIEVEMENT, new ListSection(readList(dis)));
                         break;
                     case "QUALIFICATIONS":
-                        List<String> listRead1 = readList(dis);
-                        resume.addSection(SectionType.QUALIFICATIONS, new ListSection(listRead1));
+                        resume.addSection(SectionType.QUALIFICATIONS, new ListSection(readList(dis)));
                         break;
                     case "EXPERIENCE":
-                        int orgSize = dis.readInt();
-                        resume.addSection(SectionType.EXPERIENCE, new OrganisationSection(readOrganisations(dtf, dis, resume, orgSize)));
+                        resume.addSection(SectionType.EXPERIENCE, new OrganisationSection(readOrganisations(dtf, dis)));
                         break;
                     case "EDUCATION":
-                        int orgSize1 = dis.readInt();
-                        resume.addSection(SectionType.EDUCATION, new OrganisationSection(readOrganisations(dtf, dis, resume, orgSize1)));
+                        resume.addSection(SectionType.EDUCATION, new OrganisationSection(readOrganisations(dtf, dis)));
                         break;
                 }
             }
@@ -122,9 +118,10 @@ public class DataStreamSerializer implements ISerializeStrategy {
         }
     }
 
-    private List<Organisation> readOrganisations(DateTimeFormatter dtf, DataInputStream dis, Resume resume, int orgSize1) throws IOException {
+    private List<Organisation> readOrganisations(DateTimeFormatter dtf, DataInputStream dis) throws IOException {
+        int orgSize = dis.readInt();
         List<Organisation> listOrg = new ArrayList<>();
-        for (int y = 0; y < orgSize1; y++) {
+        for (int y = 0; y < orgSize; y++) {
             Organisation org = new Organisation(dis.readUTF(), dis.readUTF());
             List<Organisation.Position> positionsList = new ArrayList<>();
             int posCount = dis.readInt();
