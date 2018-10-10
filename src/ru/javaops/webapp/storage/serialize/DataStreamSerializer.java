@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DataStreamSerializer implements ISerializeStrategy {
+    private static final String NULL_HOLDER = "NuLl_HoLdEr";
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -19,7 +20,7 @@ public class DataStreamSerializer implements ISerializeStrategy {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
-            // TODO implements sections
+
             Map<SectionType, Section> sections = r.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
@@ -27,25 +28,16 @@ public class DataStreamSerializer implements ISerializeStrategy {
                 Section section = entry.getValue();
                 switch (sType) {
                     case PERSONAL:
-                        dos.writeUTF(sType.name());
-                        dos.writeUTF(section.toString());
-                        break;
                     case OBJECTIVE:
                         dos.writeUTF(sType.name());
                         dos.writeUTF(section.toString());
                         break;
                     case ACHIEVEMENT:
-                        dos.writeUTF(sType.name());
-                        writeList(dos, (ListSection) section);
-                        break;
                     case QUALIFICATIONS:
                         dos.writeUTF(sType.name());
                         writeList(dos, (ListSection) section);
                         break;
                     case EXPERIENCE:
-                        dos.writeUTF(sType.name());
-                        writeOrganisations(dos, (OrganisationSection) section);
-                        break;
                     case EDUCATION:
                         dos.writeUTF(sType.name());
                         writeOrganisations(dos, (OrganisationSection) section);
@@ -66,14 +58,14 @@ public class DataStreamSerializer implements ISerializeStrategy {
         dos.writeInt(section.getOrganisations().size());
         for (Organisation organisation : section.getOrganisations()) {
             dos.writeUTF(organisation.getName());
-            dos.writeUTF(organisation.getUrl());
+            dos.writeUTF(nullReplacer(organisation.getUrl()));
             List<Organisation.Position> positions = organisation.getPositions();
             dos.writeInt(positions.size());
             for (Organisation.Position pos : positions) {
                 dos.writeUTF(pos.getStartDate().toString());
                 dos.writeUTF(pos.getEndDate().toString());
                 dos.writeUTF(pos.getHead());
-                dos.writeUTF(pos.getDescription());
+                dos.writeUTF(nullReplacer(pos.getDescription()));
             }
         }
     }
@@ -122,14 +114,14 @@ public class DataStreamSerializer implements ISerializeStrategy {
         int organisationsCount = dis.readInt();
         List<Organisation> listOrg = new ArrayList<>();
         for (int y = 0; y < organisationsCount; y++) {
-            Organisation org = new Organisation(dis.readUTF(), dis.readUTF());
+            Organisation org = new Organisation(dis.readUTF(), nullReplacer(dis.readUTF()));
             List<Organisation.Position> positionsList = new ArrayList<>();
             int positionsCount = dis.readInt();
             for (int p = 0; p < positionsCount; p++) {
                 positionsList.add(new Organisation.Position(
                         LocalDate.parse(dis.readUTF(), dtf),
                         LocalDate.parse(dis.readUTF(), dtf),
-                        dis.readUTF(), dis.readUTF())
+                        dis.readUTF(), nullReplacer(dis.readUTF()))
                 );
             }
             listOrg.add(new Organisation(org.getName(), org.getUrl(), positionsList));
@@ -144,5 +136,14 @@ public class DataStreamSerializer implements ISerializeStrategy {
             list.add(dis.readUTF());
         }
         return list;
+    }
+
+    private String nullReplacer(String description){
+        if (description == null){
+            return NULL_HOLDER;
+        } else if (description.equals(NULL_HOLDER)) {
+            return null;
+        }
+        return description;
     }
 }

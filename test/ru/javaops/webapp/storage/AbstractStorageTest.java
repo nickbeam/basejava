@@ -17,11 +17,9 @@ public abstract class AbstractStorageTest {
 
     protected final IStorage storage;
 
-    //private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
-    private static final Resume resume1 = ResumeTestData.getResume1();//new Resume(UUID_1, "Name1");
-    private static final Resume resume2 = new Resume(UUID_2, "Name2");
+    private static final Resume resume1 = ResumeTestData.getResume1();
+    private static final Resume resume2 = ResumeTestData.getResume2();
     private static final Resume resume3 = new Resume(UUID_3, "Name3");
 
     public AbstractStorageTest(IStorage storage) {
