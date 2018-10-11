@@ -1,11 +1,13 @@
 package ru.javaops.webapp.storage.serialize;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import ru.javaops.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DataStreamSerializer implements ISerializeStrategy {
     private static final String NULL_HOLDER = "NuLl_HoLdEr";
@@ -15,102 +17,97 @@ public class DataStreamSerializer implements ISerializeStrategy {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            writeCollection(dos, contacts.entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
-
+            });
             Map<SectionType, Section> sections = r.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+            writeCollection(dos, sections.entrySet(), entry -> {
                 SectionType sType = entry.getKey();
                 Section section = entry.getValue();
+                dos.writeUTF(sType.name());
                 switch (sType) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        dos.writeUTF(sType.name());
                         dos.writeUTF(section.toString());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        dos.writeUTF(sType.name());
-                        writeList(dos, (ListSection) section);
+                        writeCollection(dos, ((ListSection) section).getItems(), dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        dos.writeUTF(sType.name());
-                        writeOrganisations(dos, (OrganisationSection) section);
+                        writeCollection(dos, ((OrganisationSection) section).getOrganisations(), organisation -> {
+                            dos.writeUTF(organisation.getName());
+                            dos.writeUTF(nullReplacer(organisation.getUrl()));
+                            writeCollection(dos, organisation.getPositions(), position -> {
+                                dos.writeUTF(position.getStartDate().toString());
+                                dos.writeUTF(position.getEndDate().toString());
+                                dos.writeUTF(position.getHead());
+                                dos.writeUTF(nullReplacer(position.getDescription()));
+                            });
+                        });
                         break;
                 }
-            }
+            });
         }
     }
 
-    private void writeList(DataOutputStream dos, ListSection section) throws IOException {
-        dos.writeInt(section.getItems().size());
-        for (String str : section.getItems()) {
-            dos.writeUTF(str);
-        }
+    private interface ItemWriter<T> {
+        void accept(T t) throws IOException;
     }
 
-    private void writeOrganisations(DataOutputStream dos, OrganisationSection section) throws IOException {
-        dos.writeInt(section.getOrganisations().size());
-        for (Organisation organisation : section.getOrganisations()) {
-            dos.writeUTF(organisation.getName());
-            dos.writeUTF(nullReplacer(organisation.getUrl()));
-            List<Organisation.Position> positions = organisation.getPositions();
-            dos.writeInt(positions.size());
-            for (Organisation.Position pos : positions) {
-                dos.writeUTF(pos.getStartDate().toString());
-                dos.writeUTF(pos.getEndDate().toString());
-                dos.writeUTF(pos.getHead());
-                dos.writeUTF(nullReplacer(pos.getDescription()));
-            }
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ItemWriter<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection){
+            writer.accept(item);
         }
     }
 
     @Override
     public Resume doRead(InputStream is) throws IOException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try (DataInputStream dis = new DataInputStream(is)) {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int contactsCount = dis.readInt();
-            for (int i = 0; i < contactsCount; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            // TODO implements sections
-            int sectionsCount = dis.readInt();
-            for (int j = 0; j < sectionsCount; j++) {
-                String currentSection = dis.readUTF();
-                switch (currentSection) {
-                    case "PERSONAL":
-                        resume.addSection(SectionType.PERSONAL, new TextSection(dis.readUTF()));
-                        break;
-                    case "OBJECTIVE":
-                        resume.addSection(SectionType.OBJECTIVE, new TextSection(dis.readUTF()));
-                        break;
-                    case "ACHIEVEMENT":
-                        resume.addSection(SectionType.ACHIEVEMENT, new ListSection(readList(dis)));
-                        break;
-                    case "QUALIFICATIONS":
-                        resume.addSection(SectionType.QUALIFICATIONS, new ListSection(readList(dis)));
-                        break;
-                    case "EXPERIENCE":
-                        resume.addSection(SectionType.EXPERIENCE, new OrganisationSection(readOrganisations(dtf, dis)));
-                        break;
-                    case "EDUCATION":
-                        resume.addSection(SectionType.EDUCATION, new OrganisationSection(readOrganisations(dtf, dis)));
-                        break;
-                }
-            }
+            readCollection(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readCollection(dis, () -> {
+                SectionType currentSection = SectionType.valueOf(dis.readUTF());
+                resume.addSection(currentSection, readSection(dis, currentSection));
+            });
             return resume;
         }
     }
 
-    private List<Organisation> readOrganisations(DateTimeFormatter dtf, DataInputStream dis) throws IOException {
+    interface ItemReader<T> {
+        void read() throws IOException;
+    }
+
+    private void readCollection(DataInputStream dis, ItemReader reader) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            reader.read();
+        }
+    }
+
+    private Section readSection(DataInputStream dis, SectionType currentSection) throws IOException {
+        switch (currentSection) {
+            case PERSONAL:
+            case OBJECTIVE:
+                return new TextSection(dis.readUTF());
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                return new ListSection(readList(dis));
+            case EXPERIENCE:
+            case EDUCATION:
+                return new OrganisationSection(readOrganisations(dis));
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    private List<Organisation> readOrganisations(DataInputStream dis) throws IOException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         int organisationsCount = dis.readInt();
         List<Organisation> listOrg = new ArrayList<>();
         for (int y = 0; y < organisationsCount; y++) {
