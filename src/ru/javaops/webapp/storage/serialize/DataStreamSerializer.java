@@ -89,7 +89,6 @@ public class DataStreamSerializer implements ISerializeStrategy {
     }
 
     private Section readSection(DataInputStream dis, SectionType currentSection) throws IOException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         switch (currentSection) {
             case PERSONAL:
             case OBJECTIVE:
@@ -104,8 +103,8 @@ public class DataStreamSerializer implements ISerializeStrategy {
                                 dis.readUTF(),
                                 nullReplacer(dis.readUTF()),
                                 readList(dis, () -> new Organisation.Position(
-                                        LocalDate.parse(dis.readUTF(), dtf),
-                                        LocalDate.parse(dis.readUTF(), dtf),
+                                        parseLocalDate(dis.readUTF()),
+                                        parseLocalDate(dis.readUTF()),
                                         dis.readUTF(), nullReplacer(dis.readUTF()))
                                 )
                         )
@@ -126,6 +125,11 @@ public class DataStreamSerializer implements ISerializeStrategy {
             list.add(reader.read());
         }
         return list;
+    }
+
+    private LocalDate parseLocalDate(String string){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(string, dtf);
     }
 
     private String nullReplacer(String description){
