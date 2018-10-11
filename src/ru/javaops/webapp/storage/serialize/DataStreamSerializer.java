@@ -79,7 +79,7 @@ public class DataStreamSerializer implements ISerializeStrategy {
         }
     }
 
-    interface ItemReader<T> {
+    private interface ItemReader<T> {
         void read() throws IOException;
     }
 
@@ -91,16 +91,27 @@ public class DataStreamSerializer implements ISerializeStrategy {
     }
 
     private Section readSection(DataInputStream dis, SectionType currentSection) throws IOException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         switch (currentSection) {
             case PERSONAL:
             case OBJECTIVE:
                 return new TextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                return new ListSection(readList(dis));
+                return new ListSection(readList(dis, dis::readUTF));
             case EXPERIENCE:
             case EDUCATION:
-                return new OrganisationSection(readOrganisations(dis));
+                return new OrganisationSection(
+                        readList(dis, () -> new Organisation(
+                                dis.readUTF(),
+                                dis.readUTF(),
+                                readList(dis, () -> new Organisation.Position(
+                                        LocalDate.parse(dis.readUTF(), dtf),
+                                        LocalDate.parse(dis.readUTF(), dtf),
+                                        dis.readUTF(), nullReplacer(dis.readUTF()))
+                                )
+                        )
+                ));
             default:
                 throw new IllegalArgumentException();
         }
@@ -126,11 +137,15 @@ public class DataStreamSerializer implements ISerializeStrategy {
         return listOrg;
     }
 
-    private List<String> readList(DataInputStream dis) throws IOException {
-        int listSize = dis.readInt();
-        List<String> list = new ArrayList<>();
-        for (int k = 0; k < listSize; k++) {
-            list.add(dis.readUTF());
+    private interface ElemReader<T>{
+        T read() throws IOException;
+    }
+
+    private <T> List<T> readList(DataInputStream dis, ElemReader<T> reader) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
         }
         return list;
     }
