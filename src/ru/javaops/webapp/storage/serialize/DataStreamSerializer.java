@@ -1,13 +1,11 @@
 package ru.javaops.webapp.storage.serialize;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import ru.javaops.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class DataStreamSerializer implements ISerializeStrategy {
     private static final String NULL_HOLDER = "NuLl_HoLdEr";
@@ -79,7 +77,7 @@ public class DataStreamSerializer implements ISerializeStrategy {
         }
     }
 
-    private interface ItemReader<T> {
+    private interface ItemReader {
         void read() throws IOException;
     }
 
@@ -104,7 +102,7 @@ public class DataStreamSerializer implements ISerializeStrategy {
                 return new OrganisationSection(
                         readList(dis, () -> new Organisation(
                                 dis.readUTF(),
-                                dis.readUTF(),
+                                nullReplacer(dis.readUTF()),
                                 readList(dis, () -> new Organisation.Position(
                                         LocalDate.parse(dis.readUTF(), dtf),
                                         LocalDate.parse(dis.readUTF(), dtf),
@@ -113,28 +111,8 @@ public class DataStreamSerializer implements ISerializeStrategy {
                         )
                 ));
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalStateException();
         }
-    }
-
-    private List<Organisation> readOrganisations(DataInputStream dis) throws IOException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        int organisationsCount = dis.readInt();
-        List<Organisation> listOrg = new ArrayList<>();
-        for (int y = 0; y < organisationsCount; y++) {
-            Organisation org = new Organisation(dis.readUTF(), nullReplacer(dis.readUTF()));
-            List<Organisation.Position> positionsList = new ArrayList<>();
-            int positionsCount = dis.readInt();
-            for (int p = 0; p < positionsCount; p++) {
-                positionsList.add(new Organisation.Position(
-                        LocalDate.parse(dis.readUTF(), dtf),
-                        LocalDate.parse(dis.readUTF(), dtf),
-                        dis.readUTF(), nullReplacer(dis.readUTF()))
-                );
-            }
-            listOrg.add(new Organisation(org.getName(), org.getUrl(), positionsList));
-        }
-        return listOrg;
     }
 
     private interface ElemReader<T>{
