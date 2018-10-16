@@ -27,16 +27,13 @@ public class Organisation implements Serializable {
     }
 
     public Organisation(String name, String url, Position... positions){
-        Objects.requireNonNull(name, "name can't be NULL");
-        this.name = name;
-        this.url = url;
-        this.positions = Arrays.asList(positions);
+        this(name, url, Arrays.asList(positions));
     }
 
     public Organisation(String name, String url, List<Position> positions){
         Objects.requireNonNull(name, "name can't be NULL");
         this.name = name;
-        this.url = url;
+        this.url = url == null ? "" : url;
         this.positions = positions;
     }
 
@@ -104,7 +101,7 @@ public class Organisation implements Serializable {
             this.startDate = startDate;
             this.endDate = endDate;
             this.head = head;
-            this.description = description;
+            this.description = description == null ? "" : description;
         }
 
         public LocalDate getStartDate() {

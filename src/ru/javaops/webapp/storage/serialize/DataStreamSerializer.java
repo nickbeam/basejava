@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DataStreamSerializer implements ISerializeStrategy {
-    private static final String NULL_HOLDER = "NuLl_HoLdEr";
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -37,12 +36,12 @@ public class DataStreamSerializer implements ISerializeStrategy {
                     case EDUCATION:
                         writeCollection(dos, ((OrganisationSection) section).getOrganisations(), organisation -> {
                             dos.writeUTF(organisation.getName());
-                            dos.writeUTF(nullReplacer(organisation.getUrl()));
+                            dos.writeUTF(organisation.getUrl());
                             writeCollection(dos, organisation.getPositions(), position -> {
                                 dos.writeUTF(position.getStartDate().toString());
                                 dos.writeUTF(position.getEndDate().toString());
                                 dos.writeUTF(position.getHead());
-                                dos.writeUTF(nullReplacer(position.getDescription()));
+                                dos.writeUTF(position.getDescription());
                             });
                         });
                         break;
@@ -99,13 +98,11 @@ public class DataStreamSerializer implements ISerializeStrategy {
             case EXPERIENCE:
             case EDUCATION:
                 return new OrganisationSection(
-                        readList(dis, () -> new Organisation(
-                                dis.readUTF(),
-                                nullReplacer(dis.readUTF()),
+                        readList(dis, () -> new Organisation(dis.readUTF(), dis.readUTF(),
                                 readList(dis, () -> new Organisation.Position(
                                         parseLocalDate(dis.readUTF()),
                                         parseLocalDate(dis.readUTF()),
-                                        dis.readUTF(), nullReplacer(dis.readUTF()))
+                                        dis.readUTF(), dis.readUTF())
                                 )
                         )
                 ));
@@ -130,14 +127,5 @@ public class DataStreamSerializer implements ISerializeStrategy {
     private LocalDate parseLocalDate(String string){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(string, dtf);
-    }
-
-    private String nullReplacer(String description){
-        if (description == null){
-            return NULL_HOLDER;
-        } else if (description.equals(NULL_HOLDER)) {
-            return null;
-        }
-        return description;
     }
 }
