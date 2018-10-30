@@ -1,5 +1,7 @@
 package ru.javaops.webapp;
 
+import ru.javaops.webapp.util.LazySingleton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +72,7 @@ public class MainConcurrancy {
 
 
         //Thread.sleep(500);
+        LazySingleton.getInstance();
         System.out.println(counter);
     }
 
