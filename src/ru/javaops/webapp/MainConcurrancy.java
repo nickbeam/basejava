@@ -22,14 +22,16 @@ public class MainConcurrancy {
             public void run() {
                 Thread currentThred = Thread.currentThread();
                 System.out.println(currentThred.getName() + ", " + currentThred.getState());
+
+                throw new IllegalStateException();
             }
         });
         thread1.start();
 
 
         new Thread(() -> {
-            Thread currentThred = Thread.currentThread();
-            System.out.println(currentThred.getName() + ", " + currentThred.getState());
+            Thread currentThread = Thread.currentThread();
+            System.out.println(currentThread.getName() + ", " + currentThread.getState());
         }).start();
 
         System.out.println(thread0.getName() + ", " + thread0.getState());
@@ -52,6 +54,7 @@ public class MainConcurrancy {
                 }
             });
             thread.start();
+            //thread.join();
             threads.add(thread);
         }
 
@@ -66,7 +69,7 @@ public class MainConcurrancy {
         });
 
 
-        Thread.sleep(500);
+        //Thread.sleep(500);
         System.out.println(counter);
     }
 
