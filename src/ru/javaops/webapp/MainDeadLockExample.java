@@ -7,22 +7,16 @@ public class MainDeadLockExample {
         Account accountB = new Account(2, "BBB", 50000.);
 
         for (int i = 1; i < 100000; i++) {
-            Thread thread01 = new Thread() {
-                @Override
-                public void run() {
-                    doTransfer(accountA, accountB, 1);
-                    System.out.println(accountA.getAmount() + " " + accountB.getAmount());
-                }
-            };
+            Thread thread01 = new Thread(() -> {
+                doTransfer(accountA, accountB, 1);
+                System.out.println(accountA.getAmount() + " " + accountB.getAmount());
+            });
             thread01.start();
 
-            Thread thread02 = new Thread() {
-                @Override
-                public void run() {
-                    doTransfer(accountB, accountA, 1);
-                    System.out.println(accountA.getAmount() + " " + accountB.getAmount());
-                }
-            };
+            Thread thread02 = new Thread(() -> {
+                doTransfer(accountB, accountA, 1);
+                System.out.println(accountA.getAmount() + " " + accountB.getAmount());
+            });
             thread02.start();
         }
     }
