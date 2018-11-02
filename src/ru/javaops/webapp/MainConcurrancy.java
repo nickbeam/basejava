@@ -74,6 +74,28 @@ public class MainConcurrancy {
         //Thread.sleep(500);
         LazySingleton.getInstance();
         System.out.println(counter);
+
+        String lock1 = "lock1";
+        String lock2 = "lock2";
+        doDeadLock(lock1, lock2);
+        doDeadLock(lock2, lock1);
+    }
+
+    private static void doDeadLock(String lock1, String lock2) {
+        new Thread(() -> {
+            synchronized (lock1){
+                System.out.println("Holding lock1");
+                System.out.println("Waiting lock2");
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                synchronized (lock2){
+                    System.out.println("Holding lock2");
+                }
+            }
+        }).start();
     }
 
     private void inc() {
