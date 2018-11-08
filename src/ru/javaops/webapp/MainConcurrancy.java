@@ -4,6 +4,7 @@ import ru.javaops.webapp.util.LazySingleton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class MainConcurrancy {
     private static int counter;
@@ -45,40 +46,51 @@ public class MainConcurrancy {
 
         //final Object lock2 = new Object();
         final MainConcurrancy mainConcurancy = new MainConcurrancy();
-        List<Thread> threads = new ArrayList<>(THREADS_COUNT);
+        CountDownLatch latch = new CountDownLatch(THREADS_COUNT);
+        ExecutorService executorService = Executors.newCachedThreadPool();
+//        List<Thread> threads = new ArrayList<>(THREADS_COUNT);
         for (int i = 0; i < THREADS_COUNT; i++) {
-            Thread thread = new Thread(new Runnable() {
+            executorService.submit(() -> {
+                {
+                    for (int j = 0; j < 100; j++) {
+                        mainConcurancy.inc();
+                    }
+                    latch.countDown();
+                }
+            });
+            /*Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     for (int j = 0; j < 100; j++) {
                         mainConcurancy.inc();
                     }
+                    latch.countDown();
                 }
             });
-            thread.start();
+            thread.start();*/
             //thread.join();
-            threads.add(thread);
+//            threads.add(thread);
         }
 
         System.out.println(counter);
 
-        threads.forEach(thread -> {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-
+//        threads.forEach(thread -> {
+//            try {
+//                thread.join();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        });
+        latch.await(10, TimeUnit.SECONDS);
+        executorService.shutdown();
         //Thread.sleep(500);
         LazySingleton.getInstance();
         System.out.println(counter);
 
         String lock1 = "lock1";
         String lock2 = "lock2";
-        doDeadLock(lock1, lock2);
-        doDeadLock(lock2, lock1);
+//        doDeadLock(lock1, lock2);
+//        doDeadLock(lock2, lock1);
     }
 
     private static void doDeadLock(String lock1, String lock2) {
