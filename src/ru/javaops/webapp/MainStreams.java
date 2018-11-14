@@ -11,29 +11,15 @@ public class MainStreams {
     }
 
     private static int minValue(int[] values) {
-        return (int) Arrays.stream(values)
+        return  Arrays.stream(values)
                 .distinct()
                 .sorted()
-                .mapToDouble(num -> (double) num)
-                .reduce((s1, s2) -> (s1 + (s2 / 10)) * 10)
+                .reduce((s1, s2) -> s1 * 10 + s2)
                 .orElse(0);
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-
-
         int sum = integers.stream().mapToInt(Integer::intValue).sum();
-        System.out.println(sum);
-        return integers.stream().filter((s) -> {
-            if (sum % 2 == 0 && s % 2 == 0) {
-                return false;
-            } else return sum % 2 == 0 || s % 2 == 0;
-        }).collect(Collectors.toList());
-
-//        if (sum % 2 == 0) {
-//            return integers.stream().filter((s) -> s % 2 != 0).collect(Collectors.toList());
-//        } else {
-//            return integers.stream().filter((s) -> s % 2 == 0).collect(Collectors.toList());
-//        }
+        return integers.stream().filter(s -> s % 2 != sum % 2).collect(Collectors.toList());
     }
 }
