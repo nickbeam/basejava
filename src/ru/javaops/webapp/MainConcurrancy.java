@@ -5,10 +5,13 @@ import ru.javaops.webapp.util.LazySingleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MainConcurrancy {
     private static int counter;
-    private static final Object LOCK = new Object();
+    //private static final Object LOCK = new Object();
+    private static final Lock lock = new ReentrantLock();
     private static final int THREADS_COUNT = 10000;
 
     public static void main(String[] args) throws InterruptedException {
@@ -26,7 +29,7 @@ public class MainConcurrancy {
                 Thread currentThred = Thread.currentThread();
                 System.out.println(currentThred.getName() + ", " + currentThred.getState());
 
-                throw new IllegalStateException();
+//                throw new IllegalStateException();
             }
         });
         thread1.start();
@@ -47,17 +50,28 @@ public class MainConcurrancy {
         //final Object lock2 = new Object();
         final MainConcurrancy mainConcurancy = new MainConcurrancy();
         CountDownLatch latch = new CountDownLatch(THREADS_COUNT);
+        //Создать кол-во потоков равное кол-ву ядер на ПК/Сервере
+//        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         ExecutorService executorService = Executors.newCachedThreadPool();
+//        CompletionService completionService = new ExecutorCompletionService(executorService);
 //        List<Thread> threads = new ArrayList<>(THREADS_COUNT);
         for (int i = 0; i < THREADS_COUNT; i++) {
-            executorService.submit(() -> {
+            Future<Integer> future = executorService.submit(() -> {
                 {
                     for (int j = 0; j < 100; j++) {
                         mainConcurancy.inc();
                     }
                     latch.countDown();
+                    return 5;
                 }
             });
+//            completionService.poll();
+            /*System.out.println(future.isDone());
+            try {
+                System.out.println(future.get());
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }*/
             /*Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -112,8 +126,15 @@ public class MainConcurrancy {
 
     private void inc() {
         double sin = Math.sin(123);
-        synchronized (this) {
+        lock.lock();
+        try {
             counter++;
+        } finally {
+            lock.unlock();
         }
+
+        /*synchronized (this) {
+            counter++;
+        }*/
     }
 }
