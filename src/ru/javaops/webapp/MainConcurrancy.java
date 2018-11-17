@@ -2,9 +2,12 @@ package ru.javaops.webapp;
 
 import ru.javaops.webapp.util.LazySingleton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -12,7 +15,15 @@ public class MainConcurrancy {
     private static int counter;
     //private static final Object LOCK = new Object();
     private static final Lock lock = new ReentrantLock();
+    private final static AtomicInteger atomicCounter = new AtomicInteger();
     private static final int THREADS_COUNT = 10000;
+
+    private static final ThreadLocal<SimpleDateFormat> threadLocal = new ThreadLocal<SimpleDateFormat>(){
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat();
+        }
+    };
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -60,6 +71,7 @@ public class MainConcurrancy {
                 {
                     for (int j = 0; j < 100; j++) {
                         mainConcurancy.inc();
+                        //System.out.println(threadLocal.get().format(new Date()));
                     }
                     latch.countDown();
                     return 5;
@@ -86,7 +98,8 @@ public class MainConcurrancy {
 //            threads.add(thread);
         }
 
-        System.out.println(counter);
+        //System.out.println(counter);
+        System.out.println(atomicCounter.get());
 
 //        threads.forEach(thread -> {
 //            try {
@@ -99,7 +112,8 @@ public class MainConcurrancy {
         executorService.shutdown();
         //Thread.sleep(500);
         LazySingleton.getInstance();
-        System.out.println(counter);
+        //System.out.println(counter);
+        System.out.println(atomicCounter.get());
 
         String lock1 = "lock1";
         String lock2 = "lock2";
@@ -126,12 +140,15 @@ public class MainConcurrancy {
 
     private void inc() {
         double sin = Math.sin(123);
-        lock.lock();
-        try {
-            counter++;
-        } finally {
-            lock.unlock();
-        }
+
+        atomicCounter.incrementAndGet();
+
+//        lock.lock();
+//        try {
+//            counter++;
+//        } finally {
+//            lock.unlock();
+//        }
 
         /*synchronized (this) {
             counter++;
