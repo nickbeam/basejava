@@ -1,6 +1,7 @@
 package ru.javaops.webapp.storage;
 
 import org.junit.*;
+import ru.javaops.webapp.Config;
 import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.model.*;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 public abstract class AbstractStorageTest {
-    protected final static File STORAGE_DIR = new File("storage");
+    protected final static File STORAGE_DIR = Config.getInstance().getStorageDir(); //new File("storage");
     protected final static StreamSerializer STREAM_SERIALIZER = new StreamSerializer();
 
     protected final IStorage storage;
