@@ -17,7 +17,7 @@ public class ResumeTestData {
         return resume2;
     }
 
-    static {
+    /*static {
         resume1.addContact(ContactType.PHONE, "+71231231212");
         resume1.addContact(ContactType.MOBILE_PHONE, "+79217340000");
         resume1.addContact(ContactType.EMAIL, "name1@mail.ru");
@@ -81,5 +81,5 @@ public class ResumeTestData {
                         new Organisation.Position(2000, Month.SEPTEMBER, 2004, Month.JUNE, "Student", null)
                 )
         ));
-    }
+    }*/
 }
