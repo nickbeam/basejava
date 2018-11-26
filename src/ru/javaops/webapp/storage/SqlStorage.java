@@ -1,5 +1,6 @@
 package ru.javaops.webapp.storage;
 
+import ru.javaops.webapp.exception.ExistStorageException;
 import ru.javaops.webapp.exception.NotExistStorageException;
 import ru.javaops.webapp.exception.StorageException;
 import ru.javaops.webapp.model.Resume;
@@ -42,13 +43,15 @@ public class SqlStorage implements IStorage {
 
     @Override
     public void update(Resume resume) {
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
-            ps.setString(1, resume.getFullName());
-            ps.setString(2, resume.getUuid());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new StorageException(e);
+        if (get(resume.getUuid()).equals(resume)) {
+            try (Connection conn = connectionFactory.getConnection();
+                 PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                ps.setString(1, resume.getFullName());
+                ps.setString(2, resume.getUuid());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new StorageException(e);
+            }
         }
     }
 
@@ -60,18 +63,20 @@ public class SqlStorage implements IStorage {
             ps.setString(2, resume.getFullName());
             ps.execute();
         } catch (SQLException e) {
-            throw new StorageException(e);
+            throw new ExistStorageException(resume.getUuid());
         }
     }
 
     @Override
     public void delete(String uuid) {
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement ps = conn.prepareStatement("DELETE FROM resume r WHERE r.uuid = ?")) {
-            ps.setString(1, uuid);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new StorageException(e);
+        if (get(uuid).getUuid().equals(uuid)) {
+            try (Connection conn = connectionFactory.getConnection();
+                 PreparedStatement ps = conn.prepareStatement("DELETE FROM resume r WHERE r.uuid = ?")) {
+                ps.setString(1, uuid);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new NotExistStorageException(uuid);
+            }
         }
     }
 
