@@ -60,7 +60,7 @@ public class MainConcurrancy {
 
         //final Object lock2 = new Object();
         final MainConcurrancy mainConcurancy = new MainConcurrancy();
-        CountDownLatch latch = new CountDownLatch(THREADS_COUNT);
+        //CountDownLatch latch = new CountDownLatch(THREADS_COUNT);
         //Создать кол-во потоков равное кол-ву ядер на ПК/Сервере
 //        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -73,7 +73,7 @@ public class MainConcurrancy {
                         mainConcurancy.inc();
                         //System.out.println(threadLocal.get().format(new Date()));
                     }
-                    latch.countDown();
+                    //latch.countDown();
                     return 5;
                 }
             });
@@ -108,7 +108,7 @@ public class MainConcurrancy {
 //                e.printStackTrace();
 //            }
 //        });
-        latch.await(10, TimeUnit.SECONDS);
+        //latch.await(10, TimeUnit.SECONDS);
         executorService.shutdown();
         //Thread.sleep(500);
         LazySingleton.getInstance();

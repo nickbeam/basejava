@@ -6,7 +6,6 @@ import java.util.Properties;
 
 public class SqlStorageTest extends AbstractStorageTest {
     public SqlStorageTest() {
-        //super(new SqlStorage(Config.getInstance().getStorageDir().toString(), "postgres", "postgres"));
-        super(new SqlStorage("jdbc:postgresql://localhost:5432/resumes", "postgres", "postgres"));
+        super(Config.getInstance().getStorage());
     }
 }
