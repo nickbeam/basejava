@@ -10,8 +10,8 @@ public class Config {
     private final static File PROPS = new File("config/resumes.properties");
     private static final Config INSTANCE = new Config();
 
-    private File storageDir;
-    private IStorage storage;
+    private final File storageDir;
+    private final IStorage storage;
 
     public static Config getInstance() {
         return INSTANCE;

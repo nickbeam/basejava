@@ -23,7 +23,7 @@ public class SqlStorage implements IStorage {
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.execute("SELECT * FROM resume r WHERE r.uuid = ?", (ps) -> {
+        return sqlHelper.execute("SELECT * FROM resume r WHERE r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
@@ -35,7 +35,7 @@ public class SqlStorage implements IStorage {
 
     @Override
     public void update(Resume resume) {
-        sqlHelper.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", (ps) -> {
+        sqlHelper.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", ps -> {
             ps.setString(1, resume.getFullName());
             ps.setString(2, resume.getUuid());
             if (ps.executeUpdate() == 0) {
@@ -47,7 +47,7 @@ public class SqlStorage implements IStorage {
 
     @Override
     public void save(Resume resume) {
-        sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", (ps) -> {
+        sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
             try {
@@ -61,7 +61,7 @@ public class SqlStorage implements IStorage {
 
     @Override
     public void delete(String uuid) {
-        sqlHelper.execute("DELETE FROM resume r WHERE r.uuid = ?", (ps) -> {
+        sqlHelper.execute("DELETE FROM resume r WHERE r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException(uuid);
@@ -72,13 +72,11 @@ public class SqlStorage implements IStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("SELECT uuid, full_name FROM resume ORDER BY uuid ASC ", (ps) -> {
+        return sqlHelper.execute("SELECT * FROM resume ORDER BY full_name, uuid ASC ", ps -> {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (rs.next()) {
-                String uuid = rs.getString(1).replaceAll("\\s", "");
-                String fullName = rs.getString(2);
-                resumes.add(new Resume(uuid, fullName));
+                resumes.add(new Resume(rs.getString(1).replaceAll("\\s", ""), rs.getString(2)));
             }
             return resumes;
         });
@@ -88,8 +86,7 @@ public class SqlStorage implements IStorage {
     public int size() {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume", (ps) -> {
             ResultSet rs = ps.executeQuery();
-            rs.next();
-            return rs.getInt(1);
+            return rs.next() ? rs.getInt(1) : 0;
         });
     }
 }
