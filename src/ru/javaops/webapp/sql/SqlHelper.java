@@ -1,6 +1,5 @@
 package ru.javaops.webapp.sql;
 
-import ru.javaops.webapp.exception.StorageException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +21,7 @@ public class SqlHelper {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             return executor.execute(ps);
         } catch (SQLException e) {
-            throw new StorageException(e);
+            throw ExceptionUtil.convertException(e);
         }
     }
 }
