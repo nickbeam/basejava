@@ -1,12 +1,14 @@
 package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.exception.NotExistStorageException;
+import ru.javaops.webapp.model.ContactType;
 import ru.javaops.webapp.model.Resume;
 import ru.javaops.webapp.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements IStorage {
     private final SqlHelper sqlHelper;
@@ -22,13 +24,23 @@ public class SqlStorage implements IStorage {
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.execute("SELECT * FROM resume r WHERE r.uuid = ?", ps -> {
+        return sqlHelper.execute("" +
+                              "     SELECT * FROM resume r " +
+                              "  LEFT JOIN contact c " +
+                              "         ON r.uuid = c.resume_uuid" +
+                              "      WHERE r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            return new Resume(uuid, rs.getString("full_name"));
+            Resume resume = new Resume(uuid, rs.getString("full_name"));
+            do {
+                String value = rs.getString("value");
+                ContactType contactType = ContactType.valueOf(rs.getString("type"));
+                resume.addContact(contactType, value);
+            } while (rs.next());
+            return resume;
         });
     }
 
@@ -52,6 +64,15 @@ public class SqlStorage implements IStorage {
             ps.execute();
             return null;
         });
+        for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
+            sqlHelper.execute("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)", ps -> {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                ps.execute();
+                return null;
+            });
+        }
     }
 
     @Override
@@ -71,7 +92,7 @@ public class SqlStorage implements IStorage {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (rs.next()) {
-                resumes.add(new Resume(rs.getString(1).replaceAll("\\s", ""), rs.getString(2)));
+                resumes.add(new Resume(rs.getString("uuid").replaceAll("\\s", ""), rs.getString("full_name")));
             }
             return resumes;
         });
