@@ -17,7 +17,7 @@ public class ResumeTestData {
         return resume2;
     }
 
-    /*static {
+    static {
         resume1.addContact(ContactType.PHONE, "+71231231212");
         resume1.addContact(ContactType.MOBILE_PHONE, "+79217340000");
         resume1.addContact(ContactType.EMAIL, "name1@mail.ru");
@@ -28,7 +28,7 @@ public class ResumeTestData {
         resume1.addContact(ContactType.STACKOVERFLOW, "Stackoverflow/name1");
         resume1.addContact(ContactType.HOME_PAGE, "homepage/name1");
 
-        resume1.addSection(SectionType.PERSONAL, new TextSection("Личные качества resume 1"));
+/*        resume1.addSection(SectionType.PERSONAL, new TextSection("Личные качества resume 1"));
         resume1.addSection(SectionType.OBJECTIVE, new TextSection("Позиция для resume 1"));
 
         resume1.addSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("achievment 1", "achievment 2", "achievment 3")));
@@ -48,7 +48,7 @@ public class ResumeTestData {
                 new Organisation("Study 1", "urlStudy1",
                         new Organisation.Position(2000, Month.SEPTEMBER, 2004, Month.JUNE, "Student", "Was a student")
                 )
-        ));
+        ));*/
 
         resume2.addContact(ContactType.PHONE, "+79999999999");
         resume2.addContact(ContactType.MOBILE_PHONE, "+79119999991");
@@ -60,7 +60,7 @@ public class ResumeTestData {
         resume2.addContact(ContactType.STACKOVERFLOW, "Stackoverflow/name2");
         resume2.addContact(ContactType.HOME_PAGE, "homepage/name2");
 
-        resume2.addSection(SectionType.PERSONAL, new TextSection("Личные качества resume 2"));
+        /*resume2.addSection(SectionType.PERSONAL, new TextSection("Личные качества resume 2"));
         resume2.addSection(SectionType.OBJECTIVE, new TextSection("Позиция для resume 2"));
 
         resume2.addSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("achievment 1", "achievment 2", "achievment 3")));
@@ -80,6 +80,6 @@ public class ResumeTestData {
                 new Organisation("Study 2", "urlStudy2",
                         new Organisation.Position(2000, Month.SEPTEMBER, 2004, Month.JUNE, "Student", null)
                 )
-        ));
-    }*/
+        ));*/
+    }
 }
