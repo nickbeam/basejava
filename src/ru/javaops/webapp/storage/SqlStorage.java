@@ -7,6 +7,7 @@ import ru.javaops.webapp.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,9 @@ public class SqlStorage implements IStorage {
                 throw new NotExistStorageException(uuid);
             }
             Resume resume = new Resume(uuid, rs.getString("full_name"));
-            addContacts(rs, resume);
+            do {
+                addContacts(rs, resume);
+            } while (rs.next());
             return resume;
         });
     }
@@ -83,23 +86,23 @@ public class SqlStorage implements IStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.transactionalExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid ASC ")) {
-                ResultSet rs = ps.executeQuery();
-                List<Resume> resumes = new ArrayList<>();
-                while (rs.next()) {
-                    Resume resume = new Resume(rs.getString("uuid").replaceAll("\\s", ""), rs.getString("full_name"));
-                    try (PreparedStatement ps1 = conn.prepareStatement("SELECT * FROM contact c WHERE c.resume_uuid = ?")) {
-                        ps1.setString(1, resume.getUuid());
-                        ResultSet rs1 = ps1.executeQuery();
-                        if (rs1.next()) {
-                            addContacts(rs1, resume);
-                        }
-                    }
-                    resumes.add(resume);
+        return sqlHelper.execute("    SELECT * FROM resume " +
+                "LEFT JOIN contact " +
+                "       ON resume.uuid = contact.resume_uuid " +
+                " ORDER BY full_name, uuid ASC", ps -> {
+            ResultSet rs = ps.executeQuery();
+            Map<String, Resume> resumes = new LinkedHashMap<>();
+            while (rs.next()) {
+                String uuid = rs.getString("uuid").replaceAll("\\s", "");
+                Resume resume = resumes.get(uuid);
+                if (resume == null) {
+                    resume = new Resume(rs.getString("uuid").replaceAll("\\s", ""), rs.getString("full_name"));
+                    resumes.put(uuid, resume);
                 }
-                return resumes;
+                addContacts(rs, resume);
+
             }
+            return new ArrayList<>(resumes.values());
         });
     }
 
@@ -112,13 +115,11 @@ public class SqlStorage implements IStorage {
     }
 
     private void addContacts(ResultSet rs, Resume resume) throws SQLException {
-        do {
-            if (rs.getString("type") != null) {
-                String value = rs.getString("value");
-                ContactType contactType = ContactType.valueOf(rs.getString("type"));
-                resume.addContact(contactType, value);
-            }
-        } while (rs.next());
+        if (rs.getString("type") != null) {
+            String value = rs.getString("value");
+            ContactType contactType = ContactType.valueOf(rs.getString("type"));
+            resume.addContact(contactType, value);
+        }
     }
 
     private void saveContacts(Resume resume, Connection conn) throws SQLException {
