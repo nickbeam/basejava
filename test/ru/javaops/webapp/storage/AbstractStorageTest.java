@@ -53,12 +53,15 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() {
         List<Resume> listStorage = storage.getAllSorted(); //Arrays.asList(resumes);
-        Assert.assertEquals(listStorage, Arrays.asList(resume1, resume2, resume3));
+        Assert.assertEquals(Arrays.asList(resume1, resume2, resume3), listStorage);
     }
 
     @Test
     public void update() {
         Resume resume = storage.get(UUID_3);
+        resume3.addContact(ContactType.PHONE, "+79898989898");
+        resume3.addContact(ContactType.MOBILE_PHONE, "+7555444554");
+        resume3.addContact(ContactType.EMAIL, "name33@mail.ru");
         storage.update(resume);
         compareSize(3);
         compareResume(resume);

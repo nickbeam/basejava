@@ -37,7 +37,7 @@ public class SqlStorage implements IStorage {
             }
             Resume resume = new Resume(uuid, rs.getString("full_name"));
             do {
-                addContacts(rs, resume);
+                addContact(rs, resume);
             } while (rs.next());
             return resume;
         });
@@ -54,7 +54,7 @@ public class SqlStorage implements IStorage {
                 }
             }
             deleteContacts(resume, conn);
-            saveContacts(resume, conn);
+            insertContacts(resume, conn);
             return null;
         });
 
@@ -68,7 +68,7 @@ public class SqlStorage implements IStorage {
                 ps.setString(2, resume.getFullName());
                 ps.execute();
             }
-            saveContacts(resume, conn);
+            insertContacts(resume, conn);
             return null;
         });
     }
@@ -96,10 +96,10 @@ public class SqlStorage implements IStorage {
                 String uuid = rs.getString("uuid").replaceAll("\\s", "");
                 Resume resume = resumes.get(uuid);
                 if (resume == null) {
-                    resume = new Resume(rs.getString("uuid").replaceAll("\\s", ""), rs.getString("full_name"));
+                    resume = new Resume(uuid, rs.getString("full_name"));
                     resumes.put(uuid, resume);
                 }
-                addContacts(rs, resume);
+                addContact(rs, resume);
 
             }
             return new ArrayList<>(resumes.values());
@@ -114,15 +114,14 @@ public class SqlStorage implements IStorage {
         });
     }
 
-    private void addContacts(ResultSet rs, Resume resume) throws SQLException {
-        if (rs.getString("type") != null) {
-            String value = rs.getString("value");
-            ContactType contactType = ContactType.valueOf(rs.getString("type"));
-            resume.addContact(contactType, value);
+    private void addContact(ResultSet rs, Resume resume) throws SQLException {
+        String value = rs.getString("value");
+        if (rs.getString("value") != null) {
+            resume.addContact(ContactType.valueOf(rs.getString("type")), value);
         }
     }
 
-    private void saveContacts(Resume resume, Connection conn) throws SQLException {
+    private void insertContacts(Resume resume, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                 ps.setString(1, resume.getUuid());
