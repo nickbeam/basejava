@@ -1,13 +1,12 @@
 package ru.javaops.webapp.storage;
 
 import ru.javaops.webapp.exception.NotExistStorageException;
-import ru.javaops.webapp.model.ContactType;
-import ru.javaops.webapp.model.Resume;
+import ru.javaops.webapp.model.*;
 import ru.javaops.webapp.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -36,9 +35,7 @@ public class SqlStorage implements IStorage {
                 throw new NotExistStorageException(uuid);
             }
             Resume resume = new Resume(uuid, rs.getString("full_name"));
-            do {
-                addContact(rs, resume);
-            } while (rs.next());
+            addContacts(rs, resume);
             return resume;
         });
     }
@@ -69,6 +66,7 @@ public class SqlStorage implements IStorage {
                 ps.execute();
             }
             insertContacts(resume, conn);
+            insertSections(resume, conn);
             return null;
         });
     }
@@ -86,23 +84,27 @@ public class SqlStorage implements IStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("    SELECT * FROM resume " +
-                "LEFT JOIN contact " +
-                "       ON resume.uuid = contact.resume_uuid " +
-                " ORDER BY full_name, uuid ASC", ps -> {
-            ResultSet rs = ps.executeQuery();
-            Map<String, Resume> resumes = new LinkedHashMap<>();
-            while (rs.next()) {
-                String uuid = rs.getString("uuid").replaceAll("\\s", "");
-                Resume resume = resumes.get(uuid);
-                if (resume == null) {
-                    resume = new Resume(uuid, rs.getString("full_name"));
-                    resumes.put(uuid, resume);
+        return sqlHelper.transactionalExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid ASC ")) {
+                ResultSet rs = ps.executeQuery();
+                List<Resume> resumes = new ArrayList<>();
+                while (rs.next()) {
+                    String uuid = rs.getString("uuid").replaceAll("\\s", "");
+                    String fullname = rs.getString("full_name");
+                    sqlHelper.execute("SELECT * FROM contact c WHERE c.resume_uuid = ?", ps1 -> {
+                        ps1.setString(1, uuid);
+                        ResultSet rs1 = ps1.executeQuery();
+                        if (!rs1.next()) {
+                            throw new NotExistStorageException(uuid);
+                        }
+                        Resume resume = new Resume(uuid, fullname);
+                        addContacts(rs1, resume);
+                        resumes.add(resume);
+                        return null;
+                    });
                 }
-                addContact(rs, resume);
-
+                return resumes;
             }
-            return new ArrayList<>(resumes.values());
         });
     }
 
@@ -131,6 +133,25 @@ public class SqlStorage implements IStorage {
             }
             ps.executeBatch();
         }
+    }
+
+    private void insertSections(Resume resume, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
+            for (Map.Entry<SectionType, Section> e : resume.getSections().entrySet()) {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, e.getKey().name());
+                //ListSection list = new ListSection(String.valueOf(Arrays.asList(e.getValue())));
+                ps.setString(3, String.valueOf(e.getValue()));
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    private void addContacts(ResultSet rs, Resume resume) throws SQLException {
+        do {
+            addContact(rs, resume);
+        } while (rs.next());
     }
 
     private void deleteContacts(Resume resume, Connection conn) throws SQLException {
