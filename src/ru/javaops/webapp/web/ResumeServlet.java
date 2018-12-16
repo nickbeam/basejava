@@ -15,7 +15,11 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        String name = request.getParameter("name");
-        response.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + "!");
+        String uuid = request.getParameter("uuid");
+        if (uuid != null) {
+            response.getWriter().write("Get resume " + uuid + "!");
+        }
+//        String name = request.getParameter("name");
+//        response.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + "!");
     }
 }

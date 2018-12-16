@@ -22,21 +22,26 @@ public class SqlStorage implements IStorage {
     @Override
     public Resume get(String uuid) {
         return sqlHelper.transactionalExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r LEFT JOIN contact c on r.uuid = c.resume_uuid WHERE c.resume_uuid = ?")) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r WHERE r.uuid = ?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
                     throw new NotExistStorageException(uuid);
                 }
                 Resume resume = new Resume(uuid, rs.getString("full_name"));
-                addContacts(rs, resume);
+                try (PreparedStatement ps2 = conn.prepareStatement("SELECT * FROM resume r LEFT JOIN contact c on r.uuid = c.resume_uuid WHERE c.resume_uuid = ?")) {
+                    ps2.setString(1, uuid);
+                    ResultSet rs2 = ps2.executeQuery();
+                    if (rs2.next()) {
+                        addContacts(rs2, resume);
+                    }
+                }
                 try (PreparedStatement ps1 = conn.prepareStatement("SELECT * FROM resume r LEFT JOIN section s on r.uuid = s.resume_uuid WHERE s.resume_uuid = ?")) {
                  ps1.setString(1, uuid);
                  ResultSet rs1 = ps1.executeQuery();
-                    if (!rs1.next()) {
-                        throw new NotExistStorageException(uuid);
+                    if (rs1.next()) {
+                        addSections(rs1, resume);
                     }
-                    addSections(rs1, resume);
                 }
                 return resume;
             }
@@ -93,18 +98,7 @@ public class SqlStorage implements IStorage {
                 List<Resume> resumes = new ArrayList<>();
                 while (rs.next()) {
                     String uuid = rs.getString("uuid").replaceAll("\\s", "");
-                    String fullname = rs.getString("full_name");
-                    sqlHelper.execute("SELECT * FROM contact c WHERE c.resume_uuid = ?", ps1 -> {
-                        ps1.setString(1, uuid);
-                        ResultSet rs1 = ps1.executeQuery();
-                        if (!rs1.next()) {
-                            throw new NotExistStorageException(uuid);
-                        }
-                        Resume resume = new Resume(uuid, fullname);
-                        addContacts(rs1, resume);
-                        resumes.add(resume);
-                        return null;
-                    });
+                    resumes.add(get(uuid));
                 }
                 return resumes;
             }
@@ -144,7 +138,6 @@ public class SqlStorage implements IStorage {
                 case EXPERIENCE:
                     break;
                 default:
-                    //resume.addContact(ContactType.valueOf(rs.getString("type")), value);
                     break;
             }
         }
