@@ -33,22 +33,6 @@ public class Resume implements Comparable<Resume>, Serializable {
         this.fullName = fullName;
     }
 
-    public void addContact(ContactType type, String value) {
-        this.contacts.put(type, value);
-    }
-
-    public void addSection(SectionType type, Section value) {
-        this.sections.put(type, value);
-    }
-
-    public Map<ContactType, String> getContacts() {
-        return contacts;
-    }
-
-    public Map<SectionType, Section> getSections() {
-        return sections;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,6 +61,30 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Section getSection(SectionType type) {
+        return sections.get(type);
+    }
+
+    public void addContact(ContactType type, String value) {
+        this.contacts.put(type, value);
+    }
+
+    public void addSection(SectionType type, Section value) {
+        this.sections.put(type, value);
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
     }
 
     @Override
