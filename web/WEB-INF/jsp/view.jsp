@@ -10,6 +10,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="img/favicon.gif">
     <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="resume" type="ru.javaops.webapp.model.Resume" scope="request"/>
     <title>Резюме ${resume.fullName}</title>

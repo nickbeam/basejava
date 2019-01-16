@@ -1,8 +1,7 @@
 package ru.javaops.webapp.web;
 
 import ru.javaops.webapp.Config;
-import ru.javaops.webapp.model.ContactType;
-import ru.javaops.webapp.model.Resume;
+import ru.javaops.webapp.model.*;
 import ru.javaops.webapp.storage.IStorage;
 
 import javax.servlet.ServletConfig;
@@ -25,15 +24,32 @@ public class ResumeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
-        r.setFullName(fullName);
+        String fullName = request.getParameter("fullName").trim();
+        Resume r;
+        if (uuid.equals("") && fullName.trim().equals("")) {
+            response.sendRedirect("resume");
+            return;
+        } else if (uuid.equals("") && !fullName.equals("")) {
+            r = new Resume(fullName);
+            storage.save(r);
+        } else {
+            r = storage.get(uuid);
+            r.setFullName(fullName);
+        }
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 r.addContact(type, value);
             } else {
                 r.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                r.addSection(type, new TextSection(value));
+            } else {
+                r.getSections().remove(type);
             }
         }
         storage.update(r);
@@ -50,6 +66,9 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume r;
         switch (action) {
+            case "add":
+                request.getRequestDispatcher(("/WEB-INF/jsp/add.jsp")).forward(request, response);
+                return;
             case "delete":
                 storage.delete(uuid);
                 response.sendRedirect("resume");
