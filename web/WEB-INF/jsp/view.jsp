@@ -5,6 +5,8 @@
   Time: 21:35
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page import="ru.javaops.webapp.model.SectionType" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -24,6 +26,12 @@
             <jsp:useBean id="contactEntry"
                          type="java.util.Map.Entry<ru.javaops.webapp.model.ContactType, java.lang.String>"/>
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
+        </c:forEach>
+        <c:forEach var="type" items="<%=SectionType.values()%>">
+            <dl>
+                <dt>${type.title}</dt>
+                <dd>${resume.getSection(type)}</dd>
+            </dl>
         </c:forEach>
     <p>
 </section>

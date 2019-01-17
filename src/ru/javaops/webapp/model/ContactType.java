@@ -9,7 +9,12 @@ public enum ContactType {
             return getTitle() + ": " + toLink("mailto:" + value, value);
         }
     },
-    TELEGRAM("Telegram"),
+    TELEGRAM("Telegram"){
+        @Override
+        public String toHtml0(String value) {
+            return getTitle() + ": " + toLink("tg://resolve?domain=" + value, value);
+        }
+    },
     SKYPE("Skype"){
         @Override
         public String toHtml0(String value) {
@@ -19,20 +24,25 @@ public enum ContactType {
     LINKEDIN("LinkedIn"){
         @Override
         public String toHtml0(String value) {
-            return toLink(value);
+            return getTitle() + ": " + toLink("https://linkedin.com/" + value, value);
         }
     },
-    GITHUB("GitHub"),
+    GITHUB("GitHub"){
+        @Override
+        public String toHtml0(String value) {
+            return getTitle() + ": " + toLink("https://github.com/" + value, value);
+        }
+    },
     STACKOVERFLOW("Stackoverflow"){
         @Override
         public String toHtml0(String value) {
-            return toLink(value);
+            return getTitle() + ": " + toLink("https://stackoverflow.com/" + value, value);
         }
     },
     HOME_PAGE("Домашняя страница"){
         @Override
         public String toHtml0(String value) {
-            return toLink(value);
+            return getTitle() + ": " + toLink("https://" + value, value);
         }
     };
 
