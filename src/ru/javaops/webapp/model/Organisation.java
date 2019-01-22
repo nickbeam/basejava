@@ -66,11 +66,12 @@ public class Organisation implements Serializable {
 
     @Override
     public String toString() {
-        return "Organisation{" +
-                "name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                ", positions=" + positions +
-                '}';
+        return "Organisation: " + name + " (" + url + ", " + positions + ")";
+//        return "Organisation{" +
+//                "name='" + name + '\'' +
+//                ", url='" + url + '\'' +
+//                ", positions=" + positions +
+//                '}';
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -138,12 +139,11 @@ public class Organisation implements Serializable {
 
         @Override
         public String toString() {
-            return "Position{" +
+            return "Position: " +
                     "startDate=" + startDate +
                     ", endDate=" + endDate +
                     ", head='" + head + '\'' +
-                    ", description='" + description + '\'' +
-                    '}';
+                    ", description='" + description + '\'';
         }
     }
 }
