@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -48,28 +49,23 @@ public class ResumeServlet extends HttpServlet {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
-                    case PERSONAL: {
-                        r.addSection(type, new TextSection(value));
-                        break;
-                    }
+                    case PERSONAL:
                     case OBJECTIVE: {
                         r.addSection(type, new TextSection(value));
                         break;
                     }
-                    case ACHIEVEMENT: {
-                        r.addSection(type, new ListSection(value));
-                        break;
-                    }
+                    case ACHIEVEMENT:
                     case QUALIFICATIONS: {
                         r.addSection(type, new ListSection(value));
                         break;
                     }
-                    case EXPERIENCE: {
-                        System.out.println("1");
-                        //r.addSection(type, new OrganisationSection(new Organisation(value)));
-                        break;
-                    }
+                    case EXPERIENCE:
                     case EDUCATION: {
+                        Map<String, String[]> requestParameterMap = request.getParameterMap();
+                        requestParameterMap.forEach((key, value1) -> {
+                            System.out.println(key + value1);
+                        });
+                        //r.addSection(type, new OrganisationSection(new Organisation()));
                         break;
                     }
                     default: {

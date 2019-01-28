@@ -61,20 +61,25 @@
                 <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
                     <c:forEach var="organisation" items="<%=((OrganisationSection) section).getOrganisations()%>" varStatus="counter">
                         <h4><a>${organisation.name}</a></h4>
+                        <p>Название организации:</p>
+                        <input type="text" name="${type}" size=60 value="${organisation.name}">
+                        <p>Сайт организации:</p>
+                        <input type="text" name="${type}url" size=60 value="${organisation.url}"><br>
+
                         <c:forEach var="position" items="${organisation.positions}">
-                            <%--<jsp:useBean id="position" type="ru.javaops.webapp.model.Organisation.Position"/>--%>
+                            <jsp:useBean id="position" type="ru.javaops.webapp.model.Organisation.Position"/>
                             <label for="start">с:</label>
-                            <input type="date" id="start" name="${position.startDate}${counter.index}"
+                            <input type="date" id="start" name="${type}${counter.index}startDate"
                                    value="${position.startDate}"
                                    min="1900-01-01" max="<%=LocalDate.now()%>">
                             <label for="end">по:</label>
-                            <input type="date" id="end" name="${position.endDate}${counter.index}"
+                            <input type="date" id="end" name="${type}${counter.index}endDate"
                                    value="${position.endDate}"
                                    min="1900-01-01"><br>
                             <label>Должность: </label>
-                            <input type="text" name="${position.head}${counter.index}head" size="60" value="${position.head}">
+                            <input type="text" name="${type}${counter.index}head" size="60" value="${position.head}">
                             <%--<h5><label>${position.head}<br>--%>
-                                <textarea name="${position.description}${counter.index}" cols="80" rows="3">${position.description}</textarea><br>
+                                <textarea name="${type}${counter.index}description" cols="80" rows="3">${position.description}</textarea><br>
                             <%--</label></h5>--%>
                         </c:forEach>
                     </c:forEach>
