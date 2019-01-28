@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page import="ru.javaops.webapp.model.*" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="ru.javaops.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -48,21 +50,33 @@
             <c:choose>
                 <c:when test="${type=='PERSONAL' || type=='OBJECTIVE'}">
                     <label>
-                        <input type="text" name="${type.name()}" size=60 value="<%=((TextSection) section).getText()%>">
+                        <input type="text" name="${type}" size=60 value="<%=((TextSection) section).getText()%>">
                     </label>
                 </c:when>
                 <c:when test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
-                    <c:forEach var="item" items="<%=((ListSection) section).getItems()%>">
-                        <label>
-                            <input type="text" name="${type.name()}" size=60 value=${item}>
-                        </label>
-                    </c:forEach>
+                    <p><label>
+                        <textarea name="${type}" rows="3" cols="80"><%=String.join("\n",((ListSection) section).getItems())%></textarea>
+                    </label></p>
                 </c:when>
                 <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
-                    <c:forEach var="item" items="<%=((OrganisationSection) section).getOrganisations()%>">
-                        <label>
-                            <input type="text" name="${type.name()}" size=60 value=${item}>
-                        </label>
+                    <c:forEach var="organisation" items="<%=((OrganisationSection) section).getOrganisations()%>" varStatus="counter">
+                        <h4><a>${organisation.name}</a></h4>
+                        <c:forEach var="position" items="${organisation.positions}">
+                            <%--<jsp:useBean id="position" type="ru.javaops.webapp.model.Organisation.Position"/>--%>
+                            <label for="start">с:</label>
+                            <input type="date" id="start" name="${position.startDate}${counter.index}"
+                                   value="${position.startDate}"
+                                   min="1900-01-01" max="<%=LocalDate.now()%>">
+                            <label for="end">по:</label>
+                            <input type="date" id="end" name="${position.endDate}${counter.index}"
+                                   value="${position.endDate}"
+                                   min="1900-01-01"><br>
+                            <label>Должность: </label>
+                            <input type="text" name="${position.head}${counter.index}head" size="60" value="${position.head}">
+                            <%--<h5><label>${position.head}<br>--%>
+                                <textarea name="${position.description}${counter.index}" cols="80" rows="3">${position.description}</textarea><br>
+                            <%--</label></h5>--%>
+                        </c:forEach>
                     </c:forEach>
                 </c:when>
             </c:choose>
