@@ -16,4 +16,8 @@ public class DateUtil {
         if (date == null) return "";
         return date.equals(NOW) ? "Сейчас" : date.format(DATE_FORMATTER);
     }
+
+    public static LocalDate parse(String date) {
+        return LocalDate.parse(date);
+    }
 }

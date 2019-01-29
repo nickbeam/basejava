@@ -3,6 +3,8 @@ package ru.javaops.webapp.web;
 import ru.javaops.webapp.Config;
 import ru.javaops.webapp.model.*;
 import ru.javaops.webapp.storage.IStorage;
+import ru.javaops.webapp.util.DateUtil;
+import ru.javaops.webapp.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,7 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -47,6 +50,7 @@ public class ResumeServlet extends HttpServlet {
         }
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
+            String[] values = request.getParameterValues(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case PERSONAL:
@@ -61,18 +65,29 @@ public class ResumeServlet extends HttpServlet {
                     }
                     case EXPERIENCE:
                     case EDUCATION: {
-                        Map<String, String[]> requestParameterMap = request.getParameterMap();
-                        requestParameterMap.forEach((key, value1) -> {
-                            System.out.println(key + value1);
-                        });
-                        //r.addSection(type, new OrganisationSection(new Organisation()));
-                        break;
-                    }
-                    default: {
+                        List<Organisation> orgs = new ArrayList<>();
+                        String[] urls = request.getParameterValues(type.name() + "url");
+                        for (int i = 0; i < values.length; i++) {
+                            String name = values[i];
+                            if (!HtmlUtil.isEmpty(name)) {
+                                List<Organisation.Position> positions = new ArrayList<>();
+                                String pfx = type.name() + i;
+                                String[] startDates = request.getParameterValues(pfx + "startDate");
+                                String[] endDates = request.getParameterValues(pfx + "endDate");
+                                String[] heads = request.getParameterValues(pfx + "head");
+                                String[] descriptions = request.getParameterValues(pfx + "description");
+                                for (int j = 0; j < heads.length; j++) {
+                                    if (!HtmlUtil.isEmpty(heads[j])) {
+                                        positions.add(new Organisation.Position(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), heads[j], descriptions[j]));
+                                    }
+                                }
+                                orgs.add(new Organisation(name, urls[i], positions));
+                            }
+                        }
+                        r.addSection(type, new OrganisationSection(orgs));
                         break;
                     }
                 }
-
             } else {
                 r.getSections().remove(type);
             }
