@@ -60,7 +60,7 @@ public class ResumeServlet extends HttpServlet {
                     }
                     case ACHIEVEMENT:
                     case QUALIFICATIONS: {
-                        r.addSection(type, new ListSection(value));
+                        r.addSection(type, new ListSection(value.split("\\n")));
                         break;
                     }
                     case EXPERIENCE:
