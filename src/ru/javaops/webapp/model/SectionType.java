@@ -1,13 +1,13 @@
 package ru.javaops.webapp.model;
 
 public enum SectionType {
-    PERSONAL("Личные качества"){
+    OBJECTIVE("Позиция"){
         @Override
         public String toHtml0(String value) {
             return value;
         }
     },
-    OBJECTIVE("Позиция"){
+    PERSONAL("Личные качества"){
         @Override
         public String toHtml0(String value) {
             return value;

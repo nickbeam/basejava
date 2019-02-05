@@ -19,6 +19,8 @@ import static ru.javaops.webapp.util.DateUtil.of;
 public class Organisation implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public static final Organisation EMPTY = new Organisation("", "", Position.EMPTY);
+
     private String name;
     private String url;
     private List<Position> positions;
@@ -33,6 +35,12 @@ public class Organisation implements Serializable {
     public Organisation(String name, String url, List<Position> positions){
         Objects.requireNonNull(name, "name can't be NULL");
         this.name = name;
+        this.url = url == null ? "" : url;
+        this.positions = positions;
+    }
+
+    public Organisation(String url, List<Position> positions){
+        this.name = "Введите название организации";
         this.url = url == null ? "" : url;
         this.positions = positions;
     }
@@ -77,6 +85,8 @@ public class Organisation implements Serializable {
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
         private static final long serialVersionUID = 1L;
+
+        public static final Position EMPTY = new Position();
 
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;

@@ -43,7 +43,7 @@ public class ResumeServlet extends HttpServlet {
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
-                r.addContact(type, value);
+                r.setContact(type, value);
             } else {
                 r.getContacts().remove(type);
             }
@@ -55,12 +55,12 @@ public class ResumeServlet extends HttpServlet {
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE: {
-                        r.addSection(type, new TextSection(value));
+                        r.setSection(type, new TextSection(value));
                         break;
                     }
                     case ACHIEVEMENT:
                     case QUALIFICATIONS: {
-                        r.addSection(type, new ListSection(value.split("\\n")));
+                        r.setSection(type, new ListSection(value.split("\\n")));
                         break;
                     }
                     case EXPERIENCE:
@@ -84,7 +84,7 @@ public class ResumeServlet extends HttpServlet {
                                 orgs.add(new Organisation(name, urls[i], positions));
                             }
                         }
-                        r.addSection(type, new OrganisationSection(orgs));
+                        r.setSection(type, new OrganisationSection(orgs));
                         break;
                     }
                 }
@@ -114,8 +114,24 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             case "view":
+                r = storage.get(uuid);
+                break;
             case "edit":
                 r = storage.get(uuid);
+                for (SectionType type : new SectionType[]{SectionType.EXPERIENCE, SectionType.EDUCATION}) {
+                    OrganisationSection section = (OrganisationSection) r.getSection(type);
+                    List<Organisation> emptyFirstOrganisations = new ArrayList<>();
+                    emptyFirstOrganisations.add(Organisation.EMPTY);
+                    if (section != null) {
+                        for (Organisation org : section.getOrganisations()) {
+                            List<Organisation.Position> emptyFirstPositions = new ArrayList<>();
+                            emptyFirstPositions.add(Organisation.Position.EMPTY);
+                            emptyFirstPositions.addAll(org.getPositions());
+                            emptyFirstOrganisations.add(new Organisation(org.getUrl(), emptyFirstPositions));
+                        }
+                    }
+                    r.setSection(type, new OrganisationSection(emptyFirstOrganisations));
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");

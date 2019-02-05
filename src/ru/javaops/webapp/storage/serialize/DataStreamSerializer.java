@@ -67,10 +67,10 @@ public class DataStreamSerializer implements ISerializeStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readCollection(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readCollection(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             readCollection(dis, () -> {
                 SectionType currentSection = SectionType.valueOf(dis.readUTF());
-                resume.addSection(currentSection, readSection(dis, currentSection));
+                resume.setSection(currentSection, readSection(dis, currentSection));
             });
             return resume;
         }
