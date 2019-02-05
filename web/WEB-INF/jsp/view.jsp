@@ -86,16 +86,19 @@
         </tr>
         <c:forEach var="position" items="${org.positions}">
             <jsp:useBean id="position" type="ru.javaops.webapp.model.Organisation.Position"/>
+    <table>
         <tr>
-            <td width="15%" style="vertical-align: top"><%=HtmlUtil.formatDates(position)%>
-            </td>
-            <td><b>${position.head}</b><br>${position.description}</td>
+            <td width="25%" style="vertical-align: top"><%=HtmlUtil.formatDates(position)%></td><td><b>${position.head}</b></td>
         </tr>
-        </c:forEach>
-        </c:forEach>
-        </c:when>
-        </c:choose>
-        </c:forEach>
+        <tr>
+            <td colspan="2">${position.description}</td>
+        </tr>
+    </table>
+    </c:forEach>
+    </c:forEach>
+    </c:when>
+    </c:choose>
+    </c:forEach>
     <p>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

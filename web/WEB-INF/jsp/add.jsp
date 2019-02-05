@@ -22,7 +22,7 @@
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="uuid" value="${""}">
-        <c:set var="counter" value="${1}"/>
+        <c:set var="counter" value="${0}"/>
         <dl>
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size=50"></dd>
