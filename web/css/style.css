@@ -37,6 +37,10 @@ dd {
     vertical-align: top;
 }
 
+.positions {
+    margin-left: 10%;
+}
+
 h2, h3 {
     margin: 15px 0 5px;
 }

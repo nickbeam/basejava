@@ -36,7 +36,8 @@
         </c:forEach>
 
         <c:forEach var="sectionEntry" items="${resume.sections}">
-            <jsp:useBean id="sectionEntry" type="java.util.Map.Entry<ru.javaops.webapp.model.SectionType, ru.javaops.webapp.model.Section>"/>
+            <jsp:useBean id="sectionEntry"
+                         type="java.util.Map.Entry<ru.javaops.webapp.model.SectionType, ru.javaops.webapp.model.Section>"/>
             <c:set var="type" value="${sectionEntry.key}"/>
             <c:set var="section" value="${sectionEntry.value}"/>
             <jsp:useBean id="section" type="ru.javaops.webapp.model.Section"/>
@@ -46,10 +47,12 @@
                     <input type="text" name="${type}" size=56 value="<%=((TextSection) section).getText()%>">
                 </c:when>
                 <c:when test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
-                    <textarea name="${type}" rows="3" cols="58"><%=String.join("\n",((ListSection) section).getItems())%></textarea>
+                    <textarea name="${type}" rows="3"
+                              cols="58"><%=String.join("\n", ((ListSection) section).getItems())%></textarea>
                 </c:when>
                 <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
-                    <c:forEach var="organisation" items="<%=((OrganisationSection) section).getOrganisations()%>" varStatus="counter">
+                    <c:forEach var="organisation" items="<%=((OrganisationSection) section).getOrganisations()%>"
+                               varStatus="counter">
                         <dl>
                             <dt>Название организации:</dt>
                             <dd><input type="text" name="${type}" size=52 value="${organisation.name}"></dd>
@@ -59,33 +62,36 @@
                             <dt>Сайт организации:</dt>
                             <dd><input type="text" name="${type}url" size=52 value="${organisation.url}"></dd>
                         </dl>
+                        <div class="positions">
+                            <c:forEach var="position" items="${organisation.positions}">
+                                <jsp:useBean id="position" type="ru.javaops.webapp.model.Organisation.Position"/>
+                                <dl>
+                                    <dt>с:</dt>
+                                    <dd><input type="date" id="start" name="${type}${counter.index}startDate"
+                                               value="${position.startDate}"
+                                               min="1900-01-01" max="<%=LocalDate.now()%>"></dd>
+                                </dl>
 
-                        <c:forEach var="position" items="${organisation.positions}">
-                            <jsp:useBean id="position" type="ru.javaops.webapp.model.Organisation.Position"/>
-                            <dl>
-                                <dt>с:</dt>
-                                <dd><input type="date" id="start" name="${type}${counter.index}startDate"
-                                           value="${position.startDate}"
-                                           min="1900-01-01" max="<%=LocalDate.now()%>"></dd>
-                            </dl>
+                                <dl>
+                                    <dt>по:</dt>
+                                    <dd><input type="date" id="end" name="${type}${counter.index}endDate"
+                                               value="${position.endDate}"
+                                               min="1900-01-01"></dd>
+                                </dl>
 
-                            <dl>
-                                <dt>по:</dt>
-                                <dd><input type="date" id="end" name="${type}${counter.index}endDate"
-                                           value="${position.endDate}"
-                                           min="1900-01-01"></dd>
-                            </dl>
+                                <dl>
+                                    <dt>Должность:</dt>
+                                    <dd><input type="text" name="${type}${counter.index}head" size="52"
+                                               value="${position.head}"></dd>
+                                </dl>
 
-                            <dl>
-                                <dt>Должность:</dt>
-                                <dd><input type="text" name="${type}${counter.index}head" size="52" value="${position.head}"></dd>
-                            </dl>
-
-                            <dl>
-                                <dt>Описание:</dt>
-                                <dd><textarea name="${type}${counter.index}description" cols="54" rows="4">${position.description}</textarea><br></dd>
-                            </dl>
-                        </c:forEach>
+                                <dl>
+                                    <dt>Описание:</dt>
+                                    <dd><textarea name="${type}${counter.index}description" cols="54"
+                                                  rows="4">${position.description}</textarea><br></dd>
+                                </dl>
+                            </c:forEach>
+                        </div>
                     </c:forEach>
                 </c:when>
             </c:choose>

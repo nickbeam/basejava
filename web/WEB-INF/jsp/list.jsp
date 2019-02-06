@@ -24,7 +24,7 @@
             <th>Имя</th>
             <th>Email</th>
             <th></th>
-            <th><a href="resume?uuid=${""}&action=add"><img src="img/add.png" alt="Add"></a></th>
+            <th><a href="resume?&action=add"><img src="img/add.png" alt="Add"></a></th>
         </tr>
         <c:forEach items="${resumes}" var="resume">
             <jsp:useBean id="resume" type="ru.javaops.webapp.model.Resume"/>

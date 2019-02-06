@@ -39,12 +39,6 @@ public class Organisation implements Serializable {
         this.positions = positions;
     }
 
-    public Organisation(String url, List<Position> positions){
-        this.name = "Введите название организации";
-        this.url = url == null ? "" : url;
-        this.positions = positions;
-    }
-
     public String getName() {
         return name;
     }
